@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			ul{
+				list-style-type: none;
+			}
+			
+			html,body{
+				height: 100%;
+				overflow: hidden;
+				position: relative;
+				background-color: #000000;
+			}
+			
+			#box{
+				width: 120px;
+				height: 180px;
+				position: absolute;
+				top:50%;
+				left: 50%;
+				margin-top: -180px;
+				margin-left: -60px;
+				perspective: 1200px;
+			}
+			
+			#box ul{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				transform-style: preserve-3d;
+				transform: rotateX(-12deg);
+			}
+			
+			#box li{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				transform: rotateY(30deg);
+				cursor: pointer;
+			}
+			#box img{
+				width: 100%;
+				height: 100%;
+				border-radius: 1px;
+				box-shadow:0 0 8px #f9f;
+				-webkit-box-reflect:below 5px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,0.5) 100%);
+			}
+			#mirror {
+				width: 1200px;
+				height: 1200px;
+				position: absolute;
+				top: 100%;
+				left: 50%;
+				margin-top: -600px;
+				margin-left: -600px;
+				background: -webkit-radial-gradient(center center,600px 600px,rgba(244,23,234,0.2),rgba(0,0,0,0));
+				border-radius: 100%;
+				transform: rotateX(90deg);
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<ul id="ulBox">
+				<li><img src="img/1.jpg"/></li>
+				<li><img src="img/2.jpg"/></li>
+				<li><img src="img/3.jpg"/></li>
+				<li><img src="img/4.jpg"/></li>
+				<li><img src="img/5.jpg"/></li>
+				<li><img src="img/6.jpg"/></li>
+				<li><img src="img/7.jpg"/></li>
+				<li><img src="img/8.jpg"/></li>
+				<li><img src="img/9.jpg"/></li>
+				<li><img src="img/10.jpg"/></li>
+				<li><img src="img/11.jpg"/></li>
+				<p id="mirror"></p>
+			</ul>
+			
+		</div>
+		
+		<script>
+			$(function(){
+				var $ul = $("#ulBox");
+				var liNum = $ul.find("li").length;
+				var roY = 360/liNum;
+				
+				// 
+				
+				
+				// 
+				$ul.find("li").each(function(idx,ele){
+					$(this).css("transition","transform 1s "+(liNum-idx)*0.1+"s");
+					$(this).css({
+					"transform": "rotateY("+idx*roY+"deg) translateZ("+400+"px)"
+				})
+				})
+				
+				
+				// 启动鼠标控制目标转动的函数
+				viewMove($(document),$ul);
+				
+				//鼠标控制转动的函数
+				function viewMove($doc,$tar) {
+					var nowX, lastX, minusX = 0,
+						nowY, lastY, minusY = 0;
+					var sumX = 0,
+						sumY = 0,
+						b = 0.2; //b用于旋转角度的倍数,可动态变化
+					var timeId1, timeId2;
+					var viewZ = 0;
+					
+					$doc.mousedown(function(e) { //鼠标点击事件
+						var ev = e || window.event;
+						clearInterval(timeId1); //先清除惯性
+						lastX = ev.clientX;
+						lastY = ev.clientY;
+						$(this).on("mousemove.vMove", function(e) { //鼠标拖拽事件
+							var ev = e || window.event;
+							nowX = ev.clientX;
+							nowY = ev.clientY;
+							minusX = nowX - lastX; //在移动的瞬间,移动的距离。一般程序执行周期需要时间,所以鼠标移动速度越大，则差值越大
+							minusY = nowY - lastY;
+							b = (800 - viewZ) / (800 + 800) * 0.15 + 0.05;
+							sumX += minusX * b;
+							sumY += minusY * b;
+							lastX = nowX;
+							lastY = nowY;
+							$tar.css({
+								"transform": "translateZ(" + viewZ + "px) rotateX(" + (-sumY-12) + "deg) rotateY(" + sumX + "deg)"
+							});
+						});
+						return false
+					}).mouseup(function() { //鼠标弹起事件
+						$(this).off("mousemove.vMove"); //弹起后取消鼠标移拖拽
+						timeId1 = setInterval(function() { //鼠标拖拽后目标的惯性旋转
+							minusX *= 0.95;
+							minusY *= 0.95;
+							sumX += minusX * b;
+							sumY += minusY * b;
+							if (Math.abs(minusX) < 0.5 && Math.abs(minusY) < 0.5) { //惯性的旋转速度过小时取消惯性定时器
+								clearInterval(timeId1);
+								minusX = 0;
+								minusY = 0;
+							}
+							$tar.css({
+								"transform": "translateZ(" + viewZ + "px) rotateX(" + (-sumY-12) + "deg) rotateY(" + sumX + "deg)"
+							});
+						}, 13);
+					}).on("mousewheel", function() { //滚轮滚动事件
+						clearInterval(timeId2)
+						var dZ = arguments[1];
+						viewZ += dZ * 80;
+						viewZ = viewZ > 1500 ? 1500 : viewZ;
+						viewZ = viewZ < -6000 ? -6000 : viewZ;
+				
+						$tar.css({
+							"transform": "translateZ(" + viewZ + "px) rotateX(" + (-sumY-12) + "deg) rotateY(" + sumX + "deg)"
+						})
+						timeId2 = setInterval(function() {
+							dZ *= 0.85;
+							if (Math.abs(dZ) < 0.01) {
+								clearInterval(timeId2)
+								console.log(1)
+							}
+							viewZ += dZ * 20;
+							viewZ = viewZ > 1500 ? 1500 : viewZ;
+							viewZ = viewZ < -6000 ? -6000 : viewZ;
+							$tar.css({
+								"transform": "translateZ(" + viewZ + "px) rotateX(" + (-sumY-12) + "deg) rotateY(" + sumX + "deg)"
+							})
+						}, 13)
+					});
+				}
+			})
+		</script>
+	</body>
+</html>

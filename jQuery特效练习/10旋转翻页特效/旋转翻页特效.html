@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			body {
+				background-image: url(img/bg.jpg);
+			}
+
+			#box {
+				width: 570px;
+				height: 420px;
+				margin: 50px auto;
+				padding: 50px 70px;
+				border-radius: 5px;
+				box-shadow: 0 0 5px #000;
+				position: relative;
+			}
+
+			#picBox {
+				width: 570px;
+				height: 420px;
+				position: absolute;
+				perspective: 800px;
+			}
+
+			#picBox ul {
+				width: 100%;
+				height: 100%;
+				box-shadow: 0 0 2px #F7F7F7;
+				position: absolute;
+				transform-style: preserve-3d;
+			}
+
+			#picBox ul.onZIndex1 {
+				z-index: 1;
+			}
+
+			#picBox ul.onZIndex2 {
+				z-index: 2;
+			}
+
+			#picBox ul li {
+				position: absolute;
+				border: 1px solid transparent;
+				background-origin: border-box;
+				background-repeat: no-repeat;
+			}
+
+			#picBox ul li.onAnimate {
+				transition: transform 1.5s;
+			}
+
+			#picBox ul li.onRotateMove {
+				transform: translate(-50px, -50px) rotateX(720deg);
+			}
+
+			#picBox ul li.onBorder {
+				border-color: #000;
+			}
+			
+			#btnBox {
+				display: block;
+			}
+			
+			#btnBox div {
+				width: 40px;
+				height: 69px;
+				position: absolute;
+				top: 50%;
+				margin-top: -34.5px;
+				background-image: url(img/btn.png);
+				cursor: pointer;
+			}
+			
+			#btnBox .leftBtn {
+				left: 14px;
+			}
+			
+			#btnBox .rightBtn {
+				right: 14px;
+				background-position: -42px 0;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<div id="picBox">
+				<ul class="onZIndex1"></ul>
+				<ul></ul>
+				<ul></ul>
+				<ul></ul>
+				<ul></ul>
+			</div>
+			<div id="btnBox">
+				<div class="leftBtn"></div>
+				<div class="rightBtn"></div>
+			</div>
+		</div>
+		<script>
+			$(function() {
+				var $uls = $("#picBox>ul");
+				var $ulWidth = $uls.width(),
+					$ulHeight = $uls.height();
+				var xNum, yNum;
+				var flag = true; //用于btn限流
+				var curIdx = 0;
+				// 初始化
+				init(10, 7);
+
+				// 右按钮点击事件
+				$("#btnBox .rightBtn").click(function() {
+					if (flag) {
+						curIdx++
+						curIdx = curIdx > 4 ? 0 : curIdx;
+						flag = false;
+						nextOneStyle(curIdx);
+					}
+				});
+
+				// 左按钮点击事件
+				$("#btnBox .leftBtn").click(function() {
+					if (flag) {
+						curIdx--
+						curIdx = curIdx < 0 ? 4 : curIdx;
+						flag = false;
+						lastOneStyle(curIdx);
+					}
+				});
+
+				// 加入li并初始化位置和图片
+				function init(x, y) { //x,y分别为横纵个数
+					xNum = x;
+					yNum = y;
+					var $liWidht = $ulWidth / x,
+						$liHeight = $ulHeight / y;
+					$uls.each(function(idx) {
+						for (var i = 0; i < x * y; i++) {
+							var $li = $("<li></li>");
+							$li.appendTo($(this));
+							$li[0].x = i % x;
+							$li[0].y = parseInt(i / x);
+							$li.width($liWidht - 2).height($liHeight - 2);
+							$li.css({
+								left: i % x * $liWidht,
+								top: parseInt(i / x) * $liHeight,
+								backgroundImage: "url(img/" + (idx + 1) + ".jpg)",
+								backgroundPosition: (-i % x * $liWidht) + "px " + (-parseInt(i / x) * $liHeight) + "px"
+							});
+						}
+					});
+				}
+
+				// 用于下一张的函数
+				function nextOneStyle(idx) {
+					var sum = xNum + yNum - 2;
+					var curNum = idx - 1; //要隐藏的ul的索引值
+					curNum = curNum < 0 ? 4 : curNum;
+					var nextNum = idx; //要显示的ul的索引值
+					nextNum = nextNum > 4 ? 0 : nextNum;
+					$uls.eq(curNum).addClass("onZIndex2").siblings().removeClass("onZIndex2"); //使要隐藏的ul层级最高
+					$uls.eq(nextNum).addClass("onZIndex1").siblings().removeClass("onZIndex1"); //使要显示ul层级第二高
+					$uls.eq(nextNum).find("li").fadeIn().removeClass("onAnimate onRotateMove onBorder"); //使要显示的ul下的li并移除li的动画、位移和边框颜色
+					//设置定时器
+					var timeId = setInterval(function() {
+						$uls.eq(curNum).find("li").each(function() {
+							if (this.x + this.y == sum) {
+								if (sum == 0) {
+									$(this).addClass("onAnimate onRotateMove onBorder").fadeOut(1500, function() { //最后一个动画完成后执行的函数
+										flag = true;
+									});
+								} else {
+									$(this).addClass("onAnimate onRotateMove onBorder").fadeOut(1500);
+								}
+							}
+						});
+						if (sum < 0) {
+							clearInterval(timeId);
+						}
+						sum--
+					}, 50);
+				}
+
+				// 用于上一张的函数
+				function lastOneStyle(idx) {
+					var sum = 0;
+					var lastNum = idx; //要显示的ul索引值
+					var curNum = idx + 1; //要隐藏的ul索引值
+					curNum = curNum > 4 ? 0 : curNum;
+					$uls.eq(lastNum).addClass("onZIndex2").siblings().removeClass("onZIndex2"); //使要隐藏的ul层级最高
+					$uls.eq(curNum).addClass("onZIndex1").siblings().removeClass("onZIndex1"); //使要隐藏的ul层级最高
+					$uls.eq(lastNum).find("li").hide().addClass("onRotateMove"); //使要显示的ul下的li先隐藏并添加位移
+					// 设置定时器
+					var timeId = setInterval(function() {
+						$uls.eq(lastNum).find("li").each(function() {
+							if (this.x + this.y == sum) {
+								if (sum == xNum + yNum - 2) {
+									$(this).addClass("onAnimate").fadeIn(1500, function() { //最后一个动画完成后执行的函数
+										flag = true;
+									}).removeClass("onRotateMove"); //=========================== 必 ! 须 ! 先 ! 淡 ! 进 ! 再 ! 移 ! 除 !
+								} else {
+									$(this).addClass("onAnimate onBorder").fadeIn(1500, function() { //使边框颜色在动画的过程中逐渐移除
+										$uls.eq(lastNum).find("li").removeClass("onBorder");
+									}).removeClass("onRotateMove"); //=========================== 必 ! 须 ! 先 ! 淡 ! 进 ! 再 ! 移 ! 除 !
+								}
+							}
+						});
+						if (sum >= xNum + yNum - 2) {
+							clearInterval(timeId);
+						}
+						sum++
+					}, 50);
+				}
+
+			})
+		</script>
+	</body>
+</html>

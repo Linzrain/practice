@@ -1,0 +1,223 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	overflow: hidden;
+	perspective: 800px;
+	/*景深*/
+}
+
+li {
+	list-style-type: none;
+}
+
+#container {
+	width: 100%;
+	height: 100%;
+	background: #023b3b url(../imgs/bg.png) no-repeat center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+
+#box {
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform-style: preserve-3d;
+	transform: translateZ(-1000px) rotateX(0deg) rotateY(0deg);
+}
+
+#box li {
+	width: 120px;
+	height: 160px;
+	position: absolute;
+	left: -60px;
+	top: -80px;
+	background: rgba(0, 127, 127, 0.5);
+	border: 1px solid rgba(127, 255, 255, 0.25);
+	box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+	cursor: pointer;
+	text-align: center;
+	transition: transform 4s ease-in-out;
+}
+
+#box li .index {
+	position: absolute;
+	right: 12px;
+	top: 6px;
+	font-size: 18px !important;
+}
+
+#box li .title {
+	font-size: 60px;
+	color: rgba(255, 255, 255, 0.7);
+	margin-top: 30px;
+	margin-bottom: -5px;
+	font-weight: bold;
+	text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+#box li .author,
+#box li .time,
+#box li .index {
+	margin-top: 5px;
+	color: rgba(127, 255, 255, 0.75);
+	font-size: 14px;
+	text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+#styleBtn {
+	width: 290px;
+	height: 40px;
+	position: absolute;
+	bottom: 15px;
+	left: 15px;
+	transform: scale(1.5);
+	opacity: 0;
+	transition: 2s;
+}
+
+#styleBtn li {
+	color: rgba(127, 255, 255, 0.75);
+	border: 1px solid rgba(127, 255, 255, 0.75);
+	font-size: 12px;
+	font-weight: bold;
+	font-family: 'Microsoft yahei';
+	padding: 8px 12px;
+	float: left;
+	cursor: pointer;
+	border-radius: 3px;
+	margin: 0 5px;
+}
+
+#box li:hover {
+	box-shadow: 0 0 12px rgba(0, 255, 255, 0.75);
+	border: 1px solid rgba(127, 255, 255, 0.75);
+}
+
+#styleBtn li:hover {
+	background: rgba(0, 255, 255, 0.5);
+}
+
+#styleBtn li:active {
+	color: #000;
+}
+
+#show {
+	width: 80%;
+	height: 80%;
+	position: absolute;
+	left: 10%;
+	top: 10%;
+	background: rgba(0, 127, 127, 0.5);
+	border: 1px solid rgba(127, 255, 255, 0.25);
+	box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+	border-radius: 3px;
+	transform: rotateY(0deg) scale(1.5);
+	display: none;
+	transition: transform 1s;
+	font-family: 'Microsoft yahei';
+}
+
+#show .s-topic,
+#show .s-img,
+#show .s-author,
+#show .s-dec {
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 3px;
+	border: 1px solid rgba(127, 255, 255, 0.25);
+	box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#show .s-topic {
+	width: 50%;
+	height: 8%;
+	margin: 5% auto 8%;
+	font-size: 150%;
+}
+
+#show>div {
+	width: 100%;
+	height: 70%;
+}
+
+#show .s-img {
+	float: left;
+	width: 50%;
+	height: 80%;
+	margin-left: 5%;
+	cursor: pointer;
+}
+
+#show>div>div {
+	float: right;
+	width: 40%;
+	height: 100%;
+}
+
+#show .s-author {
+	width: 70%;
+	height: 10%;
+	margin: 8% auto 0;
+}
+
+#show .s-dec {
+	width: 60%;
+	padding: 0 5%;
+	height: 40%;
+	margin: 10% auto;
+}
+
+#show .s-img:hover {
+	box-shadow: 0 0 12px rgba(0, 255, 255, 0.75);
+	border: 1px solid rgba(127, 255, 255, 0.75);
+}
+
+
+#frame {
+	background: #000;
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 100%;
+}
+
+#back {
+	color: rgba(127, 255, 255, 0.75);
+	border: 1px solid rgba(127, 255, 255, 0.75);
+	font-size: 12px;
+	font-weight: bold;
+	font-family: 'Microsoft yahei';
+	cursor: pointer;
+	padding: 8px 12px;
+	border-radius: 3px;
+	position: absolute;
+	bottom: 30px;
+	left: 30px;
+}
+
+#back:hover {
+	background: rgba(0, 255, 255, 0.5);
+}
+
+#back:active {
+	color: #000;
+}

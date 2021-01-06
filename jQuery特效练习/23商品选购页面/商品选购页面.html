@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				background: #fff;
+			}
+			#box {
+				width: 600px;
+				height: 400px;
+				margin: 50px auto;
+			}
+
+			#topBox {
+				width: 600px;
+				height: 220px;
+				border-bottom: 1px solid #bbb;
+				font-family: 'Microsoft yahei';
+			}
+
+			#topBox>div {
+				margin-top: 15px;
+			}
+
+			#topBox>div>p {
+				display: inline-block;
+				font-size: 14px;
+				color: #000;
+				margin-right: 15px;
+			}
+
+			#topBox>div>span {
+				display: inline-block;
+				font-size: 14px;
+				border: 1px solid #999;
+				padding: 8px;
+				color: #666;
+				cursor: pointer;
+			}
+
+			#topBox>div>span.on {
+				border: 2px solid #f60;
+				padding: 7px;
+				background: url(img/on.png) no-repeat right bottom;
+			}
+
+			#bottomBox {
+				width: 600px;
+				height: 159px;
+				margin-top: 20px;
+				font-size: 20px;
+			}
+
+			#bottomBox>div>p {
+				display: inline-block;
+
+				font-size: 16px;
+			}
+
+			#bottomBox>div>span {
+				color: #f60;
+			}
+
+			#bottomBox>div>a {
+				font-size: 14px;
+				color: blue;
+				margin-left: 20px;
+			}
+
+			#bottomBox>div>a>i {
+				margin: 0 5px;
+				color: #90c;
+			}
+
+			#bottomBox>button {
+				width: 330px;
+				height: 50px;
+				font-family: 'Microsoft yahei';
+				margin-top: 20px;
+				font-size: 20px;
+				background: #f60;
+				color: #fff;
+				border: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div id="topBox" onselectstart="return false">
+				<div id="model">
+					<p>型号</p>
+					<span>4.7英寸</span>
+					<span>5.5英寸</span>
+				</div>
+				<div id="color">
+					<p>颜色</p>
+					<span>银色</span>
+					<span>金色</span>
+					<span>深空灰色</span>
+				</div>
+				<div id="rom">
+					<p>内存</p>
+					<span>16GB</span>
+					<span>64GB</span>
+					<span>128GB</span>
+				</div>
+				<div id="banben">
+					<p>版本</p>
+					<span>公开版</span>
+					<span>移动赠费版</span>
+					<span>联通合约版</span>
+				</div>
+			</div>
+			<div id="bottomBox">
+				<div>
+					<p>价格：</p>
+					<span>￥ </span>
+					<span id="price">5288</span><span>.00</span>
+					<a href="#">
+						<i>移动赠费版</i>或<i>联通合约版</i>购机价格计算请点击这里&gt;.&lt;
+					</a>
+				</div>
+				<button>立即购买</button>
+			</div>
+		</div>
+
+		<script>
+			var model = document.getElementById("model");
+			var color = document.getElementById("color");
+			var rom = document.getElementById("rom");
+			var banben = document.getElementById("banben");
+			var pri = document.getElementById("price")
+			var mSpan = model.getElementsByTagName("span");
+			var cSpan = color.getElementsByTagName("span");
+			var rSpan = rom.getElementsByTagName("span");
+			var bSpan = banben.getElementsByTagName("span");
+			var allSpan = document.getElementById("topBox").getElementsByTagName("span");
+
+
+			mSpan[0].className = "on";
+			cSpan[0].className = "on";
+			rSpan[0].className = "on";
+			bSpan[0].className = "on";
+
+			for (var i = 0; i < allSpan.length; i++) {
+				allSpan[i].onclick = function() {
+					var all = this.parentNode.children;
+					for (var j = 0; j < all.length; j++) {
+						all[j].className = "";
+					}
+					this.className = "on";
+
+					if (this.parentNode == model||this.parentNode==rom) {
+						price()
+					}
+				}
+			}
+
+			function price() {
+				var p1 = 0;
+				var p2 = 0;
+				for (var i = 0; i < mSpan.length; i++) {
+					if (mSpan[i].className == "on") {
+						p1 = i ? 6088 : 5288;
+						break;
+					}
+				}
+				for (var i = 0; i < rSpan.length; i++) {
+					if (rSpan[i].className == "on") {
+						switch (i) {
+							case 0:
+								p2 = 0;
+								break;
+							case 1:
+								p2 = 800;
+								break;
+							case 2:
+								p2 = 1600;
+								break;
+						} //switch end
+					} //if end
+				} //for end
+				pri.innerText = p1 + p2;
+			}
+		</script>
+	</body>
+</html>

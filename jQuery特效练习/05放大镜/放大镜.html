@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			img {
+				display: block;
+				border: none;
+			}
+
+			#content {
+				width: 1000px;
+				height: 500px;
+				margin: 100px;
+				position: relative;
+			}
+
+			.leftBox {
+				width: 400px;
+				height: 100%;
+				border: 1px solid lightgray;
+			}
+
+			.leftBox .picBox {
+				width: 400px;
+				height: 400px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.leftBox .picBox>div {
+				position: relative;
+				overflow: hidden;
+			}
+
+			.leftBox .picBox #cover {
+				width: 200px;
+				height: 200px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				display: none;
+				cursor: move;
+				background-image: url(img/cover.png);
+			}
+
+			.leftBox .tabBox {
+				margin-top: 23px;
+			}
+
+			.leftBox .tabBox ul {
+				display: flex;
+				justify-content: space-around;
+			}
+
+			.leftBox .tabBox li {
+				width: 50px;
+				height: 50px;
+				border: 2px solid transparent;
+				cursor: pointer;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				transition: border 0.3s;
+			}
+
+			.leftBox .tabBox li.on {
+				border-color: #f60;
+			}
+
+
+			.leftBox .tabBox li img {
+				text-align: center;
+			}
+
+			#content .magnifyPic {
+				width: 400px;
+				height: 400px;
+				position: absolute;
+				top: 1px;
+				left: 450px;
+				display: none;
+				background-image: url(img1/1.jpg);
+				background-repeat: no-repeat;
+			}
+
+			#offOn {
+				width: 100px;
+				height: 50px;
+				position: absolute;
+				border: 2px solid #fff;
+				border-radius: 10px;
+				text-align: center;
+				line-height: 50px;
+				top: 40%;
+				right: 100px;
+				cursor: pointer;
+				color: #fff;
+			}
+			#offOn:hover{
+				color: #000;
+				border-color: #000;
+			}
+			#offOn.on{
+				background-color: #00CCFF;
+				border-color: #000;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="content">
+			<div class="leftBox">
+				<div class="picBox">
+					<div>
+						<img src="img1/1.jpg" id="pic" />
+						<div id="cover"></div>
+					</div>
+				</div>
+				<div class="tabBox" >
+					<ul>
+						<li class="on"><img src="img1/1.jpg" /></li>
+						<li><img src="img1/2.jpg" /></li>
+						<li><img src="img1/3.jpg" /></li>
+						<li><img src="img1/4.jpg" /></li>
+						<li><img src="img1/5.jpg" /></li>
+					</ul>
+				</div>
+			</div>
+			<div class="magnifyPic"></div>
+		</div>
+		<div id="offOn" onselectstart="return false">开关</div>
+		<script>
+			$(function() {
+				var $pic = $("#pic");
+				var $tabli = $(".tabBox li");
+				var $magnify = $(".magnifyPic");
+				var $cover = $("#cover");
+				var imgArr = [];
+				var curIdx = 0;
+				var changeFlag = true;
+
+				getImgArr();
+
+
+				// 移入tabBox中的li,切换.pic和.magnifyPic的src
+				$(".tabBox li").hover(function() {
+					curIdx = $(this).index();
+					$(this).addClass("on").siblings().removeClass("on");
+					$pic.attr("src", $(this).find("img").attr("src"));
+					$magnify.css("backgroundImage", "url(" + $(this).find("img").attr('src') + ")");
+				});
+
+				// 为.tabBox下的img图片进行自适应处理
+				$tabli.find("img").each(function(i, ele) {
+					cover($(ele));
+				});
+
+				// 为$pic和$pic.parent()进行自适应处理
+				cover($pic, $pic.parent());
+
+				// 鼠标移入移出控制$cover和$magnify的出现和消失
+				$pic.parent().hover(function() {
+					$cover.width(Math.ceil($pic.width() * $magnify.width() / imgArr[curIdx].oWidth));
+					$cover.height(Math.ceil($pic.height() * $magnify.height() / imgArr[curIdx].oHeight));
+					$cover.show();
+					$magnify.show().css("left", $pic.width() + $pic.parent().position().left + 10);
+				}, function() {
+					$cover.hide();
+					$magnify.hide();
+				});
+
+				// 鼠标在照片上的移动事件
+				$pic.parent().mousemove(function(e) {
+					var ev = e || window.event;
+					var pX = ev.pageX,
+						pY = ev.pageY;
+					var offsetX = $(this).offset().left,
+						offsetY = $(this).offset().top;
+					var minusX = pX - offsetX,
+						minusY = pY - offsetY;
+					var curX = minusX - $cover.width() / 2,
+						curY = minusY - $cover.height() / 2;
+
+					// $cover移动距离上下限
+					curX = curX < 0 ? 0 : curX;
+					curY = curY < 0 ? 0 : curY;
+					curX = curX > $(this).width() - $cover.width() ? $(this).width() - $cover.width() : curX;
+					curY = curY > $(this).height() - $cover.height() ? $(this).height() - $cover.height() : curY;
+
+					$cover.css({
+						left: curX,
+						top: curY
+					});
+
+					// 按比例移动$magnify的背景图片
+					var mLeft = -$cover.position().left / $pic.width() * imgArr[curIdx].oWidth,
+						mTop = -$cover.position().top / $pic.height() * imgArr[curIdx].oHeight;
+					$magnify.css("backgroundPosition", (mLeft + "px " + mTop + "px"));
+				});
+
+				// 
+				$("#offOn").click(function() {
+					if(changeFlag){
+						changeFlag = false;
+						$(this).addClass("on");
+						$tabli.find("img").each(function(idx){
+							$(this).attr("src", "img/" + (idx + 1) + ".jpg");
+						});
+					}else{
+						changeFlag = true;
+						$(this).removeClass("on");
+						$tabli.find("img").each(function(idx){
+							$(this).attr("src", "img1/" + (idx + 1) + ".jpg");
+						});
+					}
+					
+					$pic.attr("src", $(".tabBox .on img").attr("src"));
+					$magnify.css("backgroundImage", "url(" + $(".tabBox .on img").attr("src") + ")");
+					getImgArr();
+					
+				})
+
+
+
+				// 图片及父元素的自适应处理
+				function cover($ele, $parent) {
+					if ($ele.width() > $ele.height()) {
+						if ($parent) {
+							$parent.width("100%")
+						}
+						$ele.width("100%")
+					} else {
+						if ($parent) {
+							$parent.height("100%")
+						}
+						$ele.height("100%")
+					}
+				}
+
+				// 返回一个元素最短的一边
+				function minLength($ele) {
+					return $ele.width() < $ele.height() ? $ele.width() : $ele.height();
+				}
+
+				// 记录照片的原始长宽
+				function getImgArr() {
+					$tabli.find("img").each(function(idx) {
+						var newImg = new Image();
+						newImg.src = this.src;
+						newImg.onload = function() {
+							imgArr[idx] = {
+								oWidth: this.width,
+								oHeight: this.height
+							}
+						}
+					});
+				}
+			})
+		</script>
+
+	</body>
+</html>

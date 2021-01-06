@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			ul{
+				list-style-type: none;
+			}
+
+			#slider {
+				height: 340px;
+				width: 790px;
+				margin: 100px auto;
+				position: relative;
+			}
+
+			#slider .picBox li {
+				position: absolute;
+				display: none;
+			}
+
+			#slider .picBox li:first-child {
+				display: block;
+			}
+
+			.btnBox {
+				display: none;
+			}
+
+			#slider:hover .btnBox {
+				display: block;
+			}
+
+			.leftBtn,
+			.rightBtn {
+				font-family: "SimSun", "宋体";
+				width: 30px;
+				height: 60px;
+				background-color: rgba(0, 0, 0, 0.1);
+				position: absolute;
+				top: 50%;
+				margin-top: -30px;
+				cursor: pointer;
+				text-align: center;
+				line-height: 60px;
+				color: #fff;
+				font-weight: 700;
+				font-size: 30px;
+			}
+
+			.leftBtn {
+				left: 0;
+			}
+
+			.rightBtn {
+				right: 0;
+			}
+
+			.leftBtn:hover,
+			.rightBtn:hover {
+				background-color: rgba(0, 0, 0, .5);
+			}
+
+			.tabBox {
+				position: absolute;
+				bottom: 10px;
+				left: 50%;
+				margin-left: -90px;
+			}
+
+			.tabBox ul {
+				width: 180px;
+				height: 18px;
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.tabBox ul li {
+				width: 18px;
+				height: 18px;
+				background: #666;
+				border-radius: 100%;
+				color: #fff;
+				text-align: center;
+				line-height: 18px;
+				font-family: 'Microsoft yahei';
+				font-size: 12px;
+				cursor: pointer;
+			}
+
+			.tabBox li.on {
+				background: #f60;
+			}
+		</style>
+		<script src="../jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="slider">
+			<div class="picBox">
+				<ul>
+					<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/3.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/4.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/5.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/6.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/7.jpg" alt=""></a></li>
+					<li><a href="#"><img src="images/8.jpg" alt=""></a></li>
+				</ul>
+			</div>
+			<!--箭头-->
+			<div class="btnBox" onselectstart="return false">
+				<span class="leftBtn">&lt;</span>
+				<span class="rightBtn">&gt;</span>
+			</div>
+			<div class="tabBox" onselectstart="return false">
+				<ul>
+					<li class="on">1</li>
+					<li>2</li>
+					<li>3</li>
+					<li>4</li>
+					<li>5</li>
+					<li>6</li>
+					<li>7</li>
+					<li>8</li>
+				</ul>
+			</div>
+		</div>
+
+		
+		<script>
+			$(function() {
+				var curIndex = 0;
+				var flag = true;
+				var $picBoxli = $(".picBox li");
+
+				//点击数字,显示相应图片
+				$(".tabBox li").click(function() {
+					curIndex = $(this).index();
+					$(this).addClass("on").siblings().removeClass("on");
+					$picBoxli.eq(curIndex).fadeIn(400).siblings().fadeOut(400)
+				});
+
+				// 下一张图片显示的函数
+				function nextOne() {
+					curIndex++;
+					if (curIndex > $picBoxli.length - 1) {
+						curIndex = 0;
+					}
+					$(".tabBox li").eq(curIndex).addClass("on").siblings().removeClass("on");
+					$picBoxli.eq(curIndex).stop().fadeIn(400, function() {
+						flag = true;
+					}).siblings().stop().fadeOut(400);
+				}
+
+				// 上一张图片显示的函数
+				function preOne() {
+					curIndex--;
+					if (curIndex < 0) {
+						curIndex = 7;
+					}
+					$(".tabBox li").eq(curIndex).addClass("on").siblings().removeClass("on");
+					$picBoxli.eq(curIndex).stop().fadeIn(400, function() {
+						flag = true;
+					}).siblings().stop().fadeOut(400);
+				}
+
+				//右边的按钮
+				$(".rightBtn").click(function() {
+					if (flag) {
+						flag = false;
+						nextOne();
+					}
+				});
+
+				// 左边的按钮
+				$(".leftBtn").click(function() {
+					if (flag) {
+						flag = false;
+						preOne();
+					}
+				});
+
+				// 定时器
+				var timeId = setInterval(function() {
+					nextOne();
+				}, 5000);
+
+				// 移入#slider清除定时器,移出时再重新设定
+				$("#slider").mouseover(function() {
+					clearInterval(timeId);
+				}).mouseleave(function() {
+					timeId = setInterval(function() {
+						nextOne();
+					}, 5000);
+				});
+			})
+		</script>
+	</body>
+</html>

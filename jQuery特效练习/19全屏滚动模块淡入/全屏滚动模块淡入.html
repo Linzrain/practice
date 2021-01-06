@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+			}
+
+			body {
+				overflow: hidden;
+			}
+
+			#box {
+				width: 100%;
+				height: 100%;
+			}
+
+			#sliderBox {
+				width: 100%;
+				height: 100%;
+			}
+
+			#sliderBox li {
+				width: 100%;
+				height: 100%;
+				position: relative;
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+			}
+
+			#sliderBox li .logo {
+				width: 215px;
+				height: 55px;
+				position: absolute;
+				top: 20px;
+				left: 20px;
+				background: url(img/logo.png) top left/100% 100%;
+			}
+
+			#sliderBox li div {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				opacity: 0;
+			}
+
+			#sliderBox .part1 div {
+				margin-top: -270px;
+				margin-left: -315px;
+			}
+
+			#sliderBox .part2 div {
+				margin-top: -73px;
+				margin-left: -315px;
+			}
+
+			#sliderBox .part3 div {
+				left: -200px;
+				margin-top: -118px;
+			}
+
+			#sliderBox .part4 div {
+				left: -200px;
+				margin-top: -135px;
+				;
+			}
+
+			#sliderBox .part5 div {
+				left: -200px;
+				margin-top: -112px;
+			}
+
+			#sliderBox .part6 div {
+				left: -200px;
+				margin-top: -115px;
+			}
+
+			#sliderBox .part7 div {
+				left: -200px;
+				margin-top: -106px;
+			}
+
+
+			#sliderBox .part1 div.on {
+				margin-top: -120px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+			#sliderBox .part2 div.on {
+				margin-top: -223px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+			#sliderBox .part3 div.on {
+				left: 100px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+			#sliderBox .part4 div.on {
+				left: 100px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+			#sliderBox .part5 div.on {
+				left: 100px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+			#sliderBox .part6 div.on {
+				left: 100px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+			#sliderBox .part7 div.on {
+				left: 100px;
+				opacity: 1;
+				transition: all 1s .4s;
+			}
+
+
+			#tabBox {
+				width: 20px;
+				height: 160px;
+				position: fixed;
+				top: 50%;
+				left: 30px;
+				margin-top: -80px;
+
+			}
+
+			#tabBox li {
+				width: 16px;
+				height: 16px;
+				border: 2px solid #fff;
+				border-radius: 50%;
+				margin: 3px 0;
+				cursor: pointer;
+			}
+
+			#tabBox li.on {
+				background-color: #fff;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<ul id="sliderBox">
+				<li style="background-image: url(img/1.jpg);" class="part1">
+					<span class="logo"></span>
+					<div><img src="img/1-2.png" width="630" /></div>
+				</li>
+				<li style="background: rgb(217, 127, 92);" class="part2">
+					<span class="logo"></span>
+					<div><img src="img/2-2.png" width="630" /></div>
+				</li>
+				<li style="background-image: url(img/3.jpg);" class="part3">
+					<span class="logo"></span>
+					<div><img src="img/3-2.png" width="570" /></div>
+				</li>
+				<li style="background-image: url(img/4.jpg);" class="part4">
+					<span class="logo"></span>
+					<div><img src="img/4-2.png" width="300" /></div>
+				</li>
+				<li style="background-image: url(img/5.jpg);" class="part5">
+					<span class="logo"></span>
+					<div><img src="img/5-2.png" width="570" /></div>
+				</li>
+				<li style="background-image: url(img/6.jpg);" class="part6">
+					<span class="logo"></span>
+					<div><img src="img/6-2.png" width="570" /></div>
+				</li>
+				<li style="background-image: url(img/7.jpg);" class="part7">
+					<span class="logo"></span>
+					<div><img src="img/7-2.png" width="570" /></div>
+				</li>
+			</ul>
+			<ul id="tabBox">
+				<li class="on"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+
+		<script>
+			$(function() {
+				var $sliderLis = $("#sliderBox li");
+				var $tabLis = $("#tabBox li");
+				var curIdx = 0;
+				var now = new Date();
+				var winH = $(window).height();
+
+				// 初始化
+				$sliderLis.eq(0).find("div").addClass("on");
+				$("html,body").animate({
+					scrollTop: 0
+				}, 10)
+
+
+
+
+				//窗口大小改变使文档的scrollTop自适应
+				$(window).resize(function() {
+					winH = $(window).height();
+					$("html,body").scrollTop(curIdx * winH);
+
+				});
+				
+				//tab点击事件
+				$tabLis.click(function(){
+					curIdx = $(this).index();
+					$("html,body").stop().animate({
+						scrollTop: curIdx * winH
+					}, 500);
+					$tabLis.eq(curIdx).addClass("on").siblings().removeClass("on");
+					$sliderLis.eq(curIdx).find("div").addClass("on");
+					setTimeout(function() {
+						$sliderLis.eq(curIdx).siblings().find("div").removeClass("on");
+					}, 450)
+				})
+
+
+
+				// 页面滚动
+				$(document).mousewheel(function() {
+					if (new Date() - now > 500) {
+						now = new Date();
+						var b = arguments[1];
+						if (b < 0) {
+							curIdx++;
+							curIdx = curIdx > $tabLis.length - 1 ? 0 : curIdx;
+						} else {
+							curIdx--;
+							curIdx = curIdx < 0 ? $tabLis.length - 1 : curIdx;
+						}
+						$("html,body").stop().animate({
+							scrollTop: curIdx * winH
+						}, 500);
+						$tabLis.eq(curIdx).addClass("on").siblings().removeClass("on");
+						$sliderLis.eq(curIdx).find("div").addClass("on");
+						setTimeout(function() {
+							$sliderLis.eq(curIdx).siblings().find("div").removeClass("on");
+						}, 450)
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

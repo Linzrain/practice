@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			#box {
+				margin: 200px auto;
+				width: 520px;
+				height: 280px;
+				border: 2px solid red;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.picBox {
+				width: 100%;
+				height: 100%;
+			}
+
+			.picBox ul {
+				width: 1000%;
+				overflow: hidden;
+			}
+
+			.picBox ul li {
+				float: left;
+				width: 520px;
+				height: 280px;
+			}
+
+			.tabBox {
+				width: 70px;
+				height: 14px;
+				position: absolute;
+				bottom: 10px;
+				left: 50%;
+				border-radius: 7px;
+				margin-left: -35px;
+				background: rgba(255, 255, 255, 0.5);
+			}
+
+			.tabBox ul li {
+				float: left;
+				width: 10px;
+				height: 10px;
+				border-radius: 5px;
+				background-color: #999;
+				margin: 2px 2px;
+				cursor: pointer;
+			}
+
+			.tabBox ul li.on {
+				background-color: red;
+			}
+
+			.btnBox {
+				display: none;
+			}
+
+			.leftBtn,
+			.rightBtn {
+				width: 40px;
+				height: 40px;
+				color: #fff;
+				font-size: 26px;
+				font-weight: bold;
+				position: absolute;
+				top: 50%;
+				margin-top: -20px;
+				background-color: rgba(0, 0, 0, 0.3);
+				line-height: 40px;
+				text-align: center;
+				cursor: pointer;
+			}
+
+			.leftBtn {
+				left: 8px;
+			}
+
+			.rightBtn {
+				right: 8px;
+			}
+
+			.leftBtn:hover,
+			.rightBtn:hover {
+				background-color: rgba(0, 0, 0, .5);
+			}
+
+			#box:hover .btnBox {
+				display: block;
+			}
+		</style>
+		<script src="../jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<div class="picBox">
+				<ul>
+					<li>
+						<a><img src="img/1.jpg" /></a>
+					</li>
+					<li>
+						<a><img src="img/2.jpg" /></a>
+					</li>
+					<li>
+						<a><img src="img/3.jpg" /></a>
+					</li>
+					<li>
+						<a><img src="img/4.jpg" /></a>
+					</li>
+					<li>
+						<a><img src="img/5.jpg" /></a>
+					</li>
+					<li>
+						<a><img src="img/1.jpg" /></a>
+					</li>
+				</ul>
+			</div>
+			<div class="tabBox">
+				<ul>
+					<li class="on"></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+			<div class="btnBox">
+				<span class="leftBtn">&lt;</span>
+				<span class="rightBtn">&gt;</span>
+			</div>
+		</div>
+		<script>
+			$(function() {
+				var curIndex = 0;
+				var $picBoxul = $(".picBox ul");
+				var flag = true; //用于限流
+
+				//进入下一张图片的函数
+				function nextOne() {
+					curIndex++;
+					if (curIndex == $(".picBox li").length - 1) {
+						$(".tabBox li").eq(0).addClass("on").siblings().removeClass("on");
+					}
+					if (curIndex > $(".picBox li").length - 1) {
+						$picBoxul.css({
+							marginLeft: "0px"
+						});
+						curIndex = 1;
+					}
+					$(".tabBox li").eq(curIndex).addClass("on").siblings().removeClass("on");
+					$(".picBox ul").animate({
+						marginLeft: -curIndex * 520 + "px"
+					}, function() {
+						flag = true
+					});
+				}
+
+				// 进入上一张图的函数
+				function preOne() {
+					curIndex--;
+					if (curIndex == $(".picBox li").length - 1) {
+
+					}
+					if (curIndex < 0) {
+						curIndex = $(".picBox li").length - 2
+						$picBoxul.css({
+							marginLeft: -(curIndex + 1) * 520 + "px"
+						});
+					}
+					$(".tabBox li").eq(curIndex).addClass("on").siblings().removeClass("on");
+					$(".picBox ul").animate({
+						marginLeft: -curIndex * 520 + "px"
+					}, function() {
+						flag = true
+					});
+				}
+
+				//圆形按钮的点击事件
+				$(".tabBox li").click(function() {
+					curIndex = $(this).index();
+					$(this).addClass("on").siblings().removeClass("on");
+					$picBoxul.animate({
+						marginLeft: -(curIndex * 520) + "px"
+					});
+				});
+
+				//右边按钮的点击事件
+				$(".rightBtn").click(function() {
+					if (flag) {
+						flag = false;
+						nextOne();
+					}
+				}).mousedown(function() {
+					return false;
+				});
+
+				// 左边按钮的点击事件
+				$(".leftBtn").click(function() {
+					if (flag) {
+						flag = false;
+						preOne()
+					}
+				}).mousedown(function() {
+					return false;
+				});
+
+				// 设置一个定时器
+				var timeId = setInterval(function() {
+					nextOne()
+				}, 5000);
+
+				//进入#box就清除定时器
+				$("#box").hover(function(){
+					clearInterval(timeId)
+				},function(){
+					timeId = setInterval(function() {
+						nextOne()
+					}, 5000);
+				})
+				
+				//进入#box就清除定时器的另一种方式
+				// $("#box").mouseover(function(){
+				// 	clearInterval(timeId)
+				// }).mouseleave(function(){
+				// 	timeId = setInterval(function() {
+				// 		nextOne()
+				// 	}, 5000);
+				// })
+
+			})
+		</script>
+	</body>
+</html>

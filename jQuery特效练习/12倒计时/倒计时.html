@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>倒计时</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+			body{
+				background: #fff;
+			}
+			#toDate{
+				font-size: 30px;
+				margin: 100px 0 -100px 100px;
+			}
+
+			#timeBox {
+				width: 1200px;
+				height: 150px;
+				margin: 200px auto;
+			}
+
+			#timeBox>div {
+				float: left;
+				height: 100%;
+			}
+
+			#timeBox>div>div {
+				float: left;
+			}
+
+
+			#timeBox>div>span {
+				float: right;
+				width: 60px;
+				height: 100%;
+				font-size: 50px;
+				line-height: 150px;
+				text-align: center;
+			}
+
+			#timeBox>div>div>div {
+				float: left;
+				margin-left: 5px;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+		<script src="js/leaf-time.js"></script>
+	</head>
+	<body>
+		<p id="toDate">距离2021/11/5<br/>还有:</p>
+		<div id="timeBox">
+			<div id="dayBox">
+				<div></div>
+				<span>天</span>
+			</div>
+			<div id="hourBox">
+				<div></div>
+				<span>时</span>
+			</div>
+			<div id="minuteBox">
+				<div></div>
+				<span>分</span>
+			</div>
+			<div id="secondBox">
+				<div></div>
+				<span>秒</span>
+			</div>
+		</div>
+
+
+
+		<script>
+			$(function() {
+				var dLeaf1 = new Leaf(),
+					dLeaf2 = new Leaf(),
+					dLeaf3 = new Leaf(),
+					hLeaf1 = new Leaf(),
+					hLeaf2 = new Leaf(),
+					mLeaf1 = new Leaf(),
+					mLeaf2 = new Leaf(),
+					sLeaf1 = new Leaf(),
+					sLeaf2 = new Leaf();
+				var dL1 = dLeaf1.createLeaf(100, 150, 140, 9,false),
+					dL2 = dLeaf2.createLeaf(100, 150, 140, 9,false),
+					dL3 = dLeaf3.createLeaf(100, 150, 140, 9,false),
+					hL1 = hLeaf1.createLeaf(100, 150, 140, 2,false),
+					hL2 = hLeaf2.createLeaf(100, 150, 140, 9,false),
+					mL1 = mLeaf1.createLeaf(100, 150, 140, 5,false),
+					mL2 = mLeaf2.createLeaf(100, 150, 140, 9,false),
+					sL1 = sLeaf1.createLeaf(100, 150, 140, 5,false),
+					sL2 = sLeaf2.createLeaf(100, 150, 140, 9,false);
+
+				var dBox = $("#dayBox>div");
+				var hBox = $("#hourBox>div");
+				var mBox = $("#minuteBox>div");
+				var sBox = $("#secondBox>div");
+
+				dBox.append($(dL1), $(dL2), $(dL3));
+				hBox.append($(hL1), $(hL2));
+				mBox.append($(mL1), $(mL2));
+				sBox.append($(sL1), $(sL2));
+
+				var tar = new Date(2021, 10, 5);
+				var dL1Numlast = 0,
+					dL2Numlast = 0,
+					dL3Numlast = 0,
+					hL1Numlast = 0,
+					hL2Numlast = 0,
+					mL1Numlast = 0,
+					mL2Numlast = 0,
+					sL1Numlast = 0,
+					sL2Numlast = 0;
+				dLeaf1.pageTurn(dL1Numlast);
+				dLeaf2.pageTurn(dL2Numlast);
+				dLeaf3.pageTurn(dL3Numlast);
+				hLeaf1.pageTurn(hL1Numlast);
+				hLeaf2.pageTurn(hL2Numlast);
+				mLeaf1.pageTurn(mL1Numlast);
+				mLeaf2.pageTurn(mL2Numlast);
+				sLeaf1.pageTurn(sL1Numlast);
+				sLeaf2.pageTurn(sL2Numlast);
+
+
+				setInterval(function() {
+					var now = new Date();
+					var alls = parseInt((tar - now) / 1000);
+					var d = parseInt(alls / 60 / 60 / 24),
+						h = parseInt((alls - d * 24 * 60 * 60) / 60 / 60),
+						m = parseInt((alls - d * 24 * 60 * 60 - h * 60 * 60) / 60),
+						s = parseInt(alls - d * 24 * 60 * 60 - h * 60 * 60 - m * 60)
+					if (d < 10) {
+						d = "0" + "0" + d;
+					} else if (d < 100 && d >= 10) {
+						d = "0" + d;
+					} else {
+						d = d.toString()
+					}
+					h = h < 10 ? "0" + h : h.toString();
+					m = m < 10 ? "0" + m : m.toString();
+					s = s < 10 ? "0" + s : s.toString();
+
+
+					var dL1Num = parseInt(d.charAt(0)),
+						dL2Num = parseInt(d.charAt(1)),
+						dL3Num = parseInt(d.charAt(2)),
+						hL1Num = parseInt(h.charAt(0)),
+						hL2Num = parseInt(h.charAt(1)),
+						mL1Num = parseInt(m.charAt(0)),
+						mL2Num = parseInt(m.charAt(1)),
+						sL1Num = parseInt(s.charAt(0)),
+						sL2Num = parseInt(s.charAt(1));
+
+					if (dL1Num != dL1Numlast) {
+						dLeaf1.pageTurn(dL1Num);
+						dL1Numlast = dL1Num;
+						console.log(dL1Num)
+					}
+					if (dL2Num != dL2Numlast) {
+						dLeaf2.pageTurn(dL2Num);
+						dL2Numlast = dL2Num;
+					}
+					if (dL3Num != dL3Numlast) {
+						dLeaf3.pageTurn(dL3Num);
+						dL3Numlast = dL3Num;
+					}
+					if (hL1Num != hL1Numlast) {
+						hLeaf1.pageTurn(hL1Num);
+						hL1Numlast = hL1Num;
+					}
+					if (hL2Num != hL2Numlast) {
+						hLeaf2.pageTurn(hL2Num);
+						hL2Numlast = hL2Num;
+					}
+					if (mL1Num != mL1Numlast) {
+						mLeaf1.pageTurn(mL1Num);
+						mL1Numlast = mL1Num;
+					}
+					if (mL2Num != mL2Numlast) {
+						mLeaf2.pageTurn(mL2Num);
+						mL2Numlast = mL2Num;
+					}
+					if (sL1Num != sL1Numlast) {
+						sLeaf1.pageTurn(sL1Num);
+						sL1Numlast = sL1Num;
+					}
+					if (sL2Num != sL2Numlast) {
+						sLeaf2.pageTurn(sL2Num);
+						sL2Numlast = sL2Num;
+					}
+
+				}, 500)
+
+			})
+		</script>
+	</body>
+</html>

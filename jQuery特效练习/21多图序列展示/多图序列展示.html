@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{
+				margin: 0;
+				padding:0;
+			}
+			ul{
+				list-style-type:none;
+			}
+			#showBox{
+				width: 80%;
+				min-width: 870px;
+				height: 540px;
+				margin: 20px auto;
+				position: relative;
+				
+			}
+			#showBox span{
+				width: 100px;
+				height: 100px;
+				position: absolute;
+				top: 50%;
+				margin-top: -50px;
+				cursor: pointer;
+				color: #3194e9;
+				text-align: center;
+				line-height: 100px;
+				font-size: 100px;
+				font-weight: bold;
+				display: none;
+				z-index: 1;
+			}
+			#showBox .leftBtn{
+				left: 0px;
+			}
+			#showBox .rightBtn{
+				right: 0px;
+				background-position:right
+			}
+			#showBox .imgBox{
+				width: 870px;
+				height: 100%;
+				margin: 0 auto;
+				position: relative;
+			}
+			#showBox .imgBox ul{
+				width: 100%;
+				height: 100%;
+			}
+			#showBox .imgBox ul li {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				display: none;
+			}
+			#showBox .imgBox ul li:first-child{
+				display: block;
+			}
+			#tabBox{
+				width: 100%;
+				height: 100px;
+				display: flex;
+				justify-content: space-between;
+				border-top: 1px solid #ddd;
+				border-bottom: 1px solid #ddd;
+			}
+			#tabBox span{
+				display: block;
+				width: 30px;
+				height: 100%;
+				border-left: 1px solid #ddd;
+				border-right: 1px solid #ddd;
+				text-align: center;
+				line-height: 100px;
+				color: #999;
+				font-size: 30px;
+				cursor: pointer;
+			}
+			#tabBox .picBox{
+				flex:1;
+				overflow: hidden;
+			}
+			#tabBox .picBox ul{
+				height: 100%;
+				position: relative;
+				display: flex;
+				justify-content: space-around
+			}
+			#tabBox .picBox ul li{
+				width: 130px;
+				height: 100%;
+				cursor: pointer;
+				background-position: center 3px;
+				background-repeat: no-repeat;
+			}
+			#tabBox .picBox ul li div{
+				width: 120px;
+				height: 75px;
+				margin: 12px auto;
+				background-size: cover;
+				
+			}
+			#tabBox .picBox ul li.on{
+				transition: background 2s;
+				background-image: url(img/mark.png);
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="showBox"  onselectstart="return false">
+			<span class="leftBtn">&lt;</span>
+			<div class="imgBox">
+				<ul></ul>
+			</div>
+			<span class="rightBtn">&gt;</span>
+		</div>
+		<div id="tabBox" onselectstart="return false">
+			<span class="tabLeft">&lt;</span>
+			<div class="picBox">
+				<ul></ul>
+			</div>
+			<span class="tabRight">&gt;</span>
+		</div>
+		
+		<script>
+			$(function(){
+				var $showUl = $("#showBox ul");
+				var $tabUl = $("#tabBox ul");
+				var $showRBtn = $("#showBox .rightBtn");
+				var $showLBtn = $("#showBox .leftBtn");
+				var curIdx = 0;
+				var tabPicWidth = $("#tabBox .picBox").width();
+				var marginLeft=0;
+				
+				//初始化
+				init(22);
+				
+				// show隐藏和显示
+				$("#showBox").hover(function(){
+					$(this).on("mousemove.move",function(e){
+						var leftX = e.pageX-$(this).offset().left;
+						if(leftX>$(this).width()/2){
+							$showRBtn.fadeIn(100);
+							$showLBtn.fadeOut(100)
+						}else{
+							$showLBtn.fadeIn(100);
+							$showRBtn.fadeOut(100);
+						}
+					})
+				},function(){
+					$(this).off("mousemove.move")
+				})
+				
+				//窗口尺寸改变事件
+				$(window).resize(function(){
+					tabPicWidth = $("#tabBox .picBox").width();
+					move(10);
+				});
+				
+				/****按钮的事件*****/
+				//show右按钮
+				$showRBtn.click(function(){
+					if(curIdx==21){
+						return
+					}
+					curIdx++;
+					$showUl.find("li").eq(curIdx).stop().fadeIn(200).siblings().stop().fadeOut(200);
+					$tabUl.find("li").eq(curIdx).addClass("on").siblings().removeClass("on");
+					move(500);
+				});
+				//show左按钮
+				$showLBtn.click(function(){
+					if(curIdx==0){
+						return
+					}
+					curIdx--;
+					$showUl.find("li").eq(curIdx).stop().fadeIn(200).siblings().stop().fadeOut(200);
+					$tabUl.find("li").eq(curIdx).addClass("on").siblings().removeClass("on");
+					move(500);
+				});
+				//tab右按钮
+				$("#tabBox .tabRight").click(function(){
+					if(marginLeft==-($tabUl.width()-tabPicWidth)){
+						return
+					}
+					 marginLeft -= (tabPicWidth-195);
+					 marginLeft = marginLeft<-($tabUl.width()-tabPicWidth)? -($tabUl.width()-tabPicWidth) : marginLeft;
+					$tabUl.stop().animate({
+						marginLeft: marginLeft+"px"
+					});
+				});
+				//tab左按钮
+				$("#tabBox .tabLeft").click(function(){
+					if(marginLeft==0){
+						return
+					}
+					 marginLeft += (tabPicWidth-195);
+					 marginLeft = marginLeft>0? 0 : marginLeft;
+					$tabUl.stop().animate({
+						marginLeft: marginLeft+"px"
+					})
+				});
+				
+				/*tab里li的点击事件*/
+				$("#tabBox .picBox ul").on("click","li",function(){
+					curIdx = $(this).index();
+					$showUl.find("li").eq(curIdx).stop().fadeIn(200).siblings().stop().fadeOut(200);
+					move(500)
+				});
+				
+				
+				//初始化添加li
+				function init(num) {
+					for(var i=0;i<num;i++){
+						var $showLi = $("<li></li>");
+						var $tabLi = $("<li><div></div></li>")
+						$showLi.css("backgroundImage", "url(img/"+(i+1)+".jpg)");
+						$tabLi.find("div").css("backgroundImage", "url(img/"+(i+1)+".jpg)")
+						$showUl.append($showLi);
+						$tabUl.append($tabLi)
+					}
+					$tabUl.width(150*num);
+					$("#tabBox li").eq(0).addClass("on")
+				}
+				
+				//ul移动到指定目标
+				function move(time){
+					var $li = $tabUl.find("li").eq(curIdx);
+					$li.addClass("on").siblings().removeClass("on");
+					marginLeft = -($li.position().left-tabPicWidth/2);
+					marginLeft = marginLeft<-($tabUl.width()-tabPicWidth)? -($tabUl.width()-tabPicWidth) : marginLeft;
+					marginLeft = marginLeft>0? 0 : marginLeft;
+					$tabUl.stop().animate({
+						marginLeft: marginLeft+"px"
+					},500);
+				}
+				
+			})
+		</script>
+	</body>
+</html>

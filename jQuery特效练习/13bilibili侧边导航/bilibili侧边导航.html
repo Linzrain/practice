@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			body {
+				background-color: #fff;
+			}
+
+			#box {
+				width: 1200px;
+				margin: 0 auto;
+				position: relative;
+			}
+
+			#headerBox {
+				width: 100%;
+				height: 500px;
+				background-color: #F0F0F0;
+				line-height: 500px;
+				text-align: center;
+				font-size: 30px;
+				box-shadow: 0 0 2px #000000;
+			}
+
+			#contentBox {
+				width: 100%;
+			}
+
+			#contentBox ul li {
+				width: 100%;
+				height: 500px;
+				color: red;
+				background-color: gainsboro;
+				border: 1px solid #000;
+				border-bottom: none;
+				font-size: 20px;
+			}
+
+			#contentBox ul li:last-child {
+				height: 0;
+				border: 0;
+			}
+
+			#navBox {
+				position: absolute;
+				left: calc(50% + 15px);
+				top: 250px;
+				margin-left: 600px;
+			}
+
+			#navBox .bgBlock {
+				display: none;
+				width: 54px;
+				height: 24px;
+				position: absolute;
+				top: 11px;
+				left: 1px;
+				background-color: #00a1d6;
+				z-index: -1;
+			}
+
+			#navBox ul {
+				border: 1px solid #e7e7e7;
+				border-radius: 10px 10px 0 0;
+				position: relative;
+			}
+
+			#navBox ul li,
+			#navBox .offOn {
+				width: 54px;
+				height: 24px;
+				text-align: center;
+				line-height: 24px;
+				font-size: 12px;
+				cursor: pointer;
+				z-index: 3;
+			}
+
+			#navBox ul li:first-child {
+				margin-top: 10px;
+			}
+
+			#navBox ul li.on,
+			#navBox .offOn.on {
+				background: #00a1d6;
+				color: #fff;
+			}
+
+			#navBox .offOn {
+				border: 1px solid #e7e7e7;
+				border-top: none;
+				border-radius: 0 0 10px 10px;
+			}
+
+			#navBox ul li:hover,
+			#navBox .offOn:hover {
+				background-color: #00a1d6;
+				color: #fff;
+			}
+
+
+			#footerBox {
+				width: 100%;
+				height: 500px;
+				background-color: #F0F0F0;
+				line-height: 500px;
+				text-align: center;
+				font-size: 30px;
+				box-shadow: 0 0 2px #000000;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<div id="headerBox">header</div>
+			<div id="contentBox">
+				<ul>
+					<li>直播</li>
+					<li>动画</li>
+					<li>番剧</li>
+					<li>国创</li>
+					<li>漫画</li>
+					<li>音乐</li>
+					<li>舞蹈</li>
+					<li>游戏</li>
+					<li>知识</li>
+					<li>课堂</li>
+					<li>数码</li>
+					<li>生活</li>
+					<li>美食</li>
+					<li>鬼畜</li>
+					<li>时尚</li>
+					<li>资讯</li>
+					<li>娱乐</li>
+					<li>专栏</li>
+					<li>电影</li>
+					<li></li>
+				</ul>
+			</div>
+			<div id="navBox" onselectstart="return false">
+				<span class="bgBlock"></span>
+				<ul>
+					<li>直播</li>
+					<li>动画</li>
+					<li>番剧</li>
+					<li>国创</li>
+					<li>漫画</li>
+					<li>音乐</li>
+					<li>舞蹈</li>
+					<li>游戏</li>
+					<li>知识</li>
+					<li>课堂</li>
+					<li>数码</li>
+					<li>生活</li>
+					<li>美食</li>
+					<li>鬼畜</li>
+					<li>时尚</li>
+					<li>资讯</li>
+					<li>娱乐</li>
+					<li>专栏</li>
+					<li>电影</li>
+				</ul>
+				<div class="offOn">开关</div>
+
+			</div>
+			<div id="footerBox">footer</div>
+		</div>
+
+
+		<script>
+			$(function() {
+				var $navUl = $("#navBox ul");
+				var $navLis = $("#navBox ul li");
+				var $contentLis = $("#contentBox ul li");
+				var $navbgBlock = $("#navBox .bgBlock");
+				var curIdx = 0,
+					tarIdx;
+				var $falseLi;
+				var flag = false,
+					winFlag = true;
+
+				//载入时确定文档位置,使侧nav处于规定位置
+				if ($(document).scrollTop() > 150) {
+					$("#navBox").css({
+						position: "fixed",
+						top: "100px"
+					});
+				}
+
+				//窗口滚动事件
+				$(window).scroll(function() {
+					if (winFlag) {
+						var $winHeight = $(window).height();
+						var scrollTop = $(document).scrollTop();
+
+						// 确定侧nav的位置
+						if (scrollTop > 150) {
+							$("#navBox").css({
+								position: "fixed",
+								top: "100px"
+							});
+						} else {
+							$("#navBox").css({
+								position: "absolute",
+								top: "250px"
+							});
+						}
+
+						// 使侧nav里li的背景和bgBlock随着页面滚动而变化(第一种方法,缺点:需末尾加一个额外的li;优点:li不用等高)
+						for (var i = 0; i < $contentLis.length; i++) {
+							if (scrollTop + $winHeight / 2 < $("#contentBox ul li").eq(i).offset().top) {
+								curIdx = i - 1;
+								if (curIdx < 0) {
+									curIdx = 0;
+									$navLis.removeClass("on");
+								} else {
+									$("#navBox ul li").eq(curIdx).addClass("on").siblings().removeClass("on");
+									$navbgBlock.css({
+										top: (curIdx * 24 + 11) + "px"
+									})
+								}
+								break
+							}
+						}
+
+						//第二种办法,缺点:需每个li等高;优点:末尾不用添加加额外的li
+						// var curIdx = parseInt((minus + $winHeight / 2) / 500);
+						// curIdx = curIdx > $navLis.length - 1 ? $navLis.length - 1 : curIdx;
+						// var minus = scrollTop - $("#headerBox").height();
+						// if (minus + $winHeight / 2 > 0) {
+						// 	$("#navBox ul li").eq(curIdx).addClass("on").siblings().removeClass("on");
+						// 	$navbgBlock.css({
+						// 		top:( curIdx * 24 + 11) + "px"
+						// 	}).show();
+						// } else {
+						// 	$navLis.removeClass("on");
+						// 	$navbgBlock.hide();
+						// }
+					}
+				});
+
+				// 侧nav的委托点击事件
+				$navUl.on("click.ck", "li", function() {
+					winFlag = false;
+					curIdx = $(this).index();
+					var sTop = $("#contentBox ul li").eq(curIdx).offset().top;
+					$(this).addClass("on").siblings().removeClass("on");
+
+					// 文档卷去高度和bgBlcok的位置跟着变化
+					$("html,body").animate({
+						scrollTop: sTop
+					}, 200, function() {
+						winFlag = true;
+					});
+
+					$navbgBlock.show().animate({
+						top: curIdx * 24 + 11 + "px"
+					}, 200, function() {
+						$navbgBlock.hide();
+					});
+				});
+
+				// 调整位置的开关
+				$("#navBox .offOn").click(function() {
+					flag = !flag;
+					if (flag) {
+						$(this).addClass("on");
+						drag()
+					} else {
+						$(this).removeClass("on")
+						$navUl.off("mousedown.down", "li");
+					}
+				});
+
+				/********* 拖拽事件************/
+				function drag() {
+
+					// 按下事件
+					$navUl.on("mousedown.down", "li", function(e) {
+						winFlag = false;
+						e.preventDefault();
+						$navLis.removeClass("on");
+						$navbgBlock.hide();
+						$that = $(this);
+						var tarIdx = $(this).index();
+						var lastY = e.clientY + $(document).scrollTop() - $navUl.offset().top;
+						var overIdx = tarIdx;
+
+						$falseLi = $(this).clone(false);
+						$falseLi.css({
+							position: "absolute",
+							top: tarIdx * 24 + 10 + "px",
+						}).addClass("on").appendTo($navUl);
+						$(this).css("opacity", 0);
+						$navLis.css("transition", "transform,.3s");
+						// 鼠标移动事件
+						$(document).on("mousemove.move", function(e) {
+							var nowY = e.clientY + $(document).scrollTop() - $navUl.offset().top;
+							var $falseLiNowTop = $falseLi.position().top;
+							overIdx = parseInt(($falseLiNowTop - 10 + 12) / 24);
+							overIdx = overIdx <= 0 ? 0 : overIdx;
+							overIdx = overIdx > $navLis.length - 1 ? $navLis.length - 1 : overIdx;
+							minusY = nowY - lastY;
+
+							$falseLi.css({
+								top: tarIdx * 24 + 10 + minusY + "px"
+							});
+
+							if (tarIdx > overIdx - 1) {
+								$("#navBox ul li").eq(overIdx).attr("over", "false").css({
+									transform: "translateY(0px)"
+								}).prevAll().css({
+									transform: "translateY(0px)"
+								}).attr("over", "false");
+								$("#navBox ul li").eq(overIdx).attr("over", "true").css({
+									transform: "translateY(0px)"
+								})
+								$("#navBox ul li").eq(tarIdx).prevUntil("#navBox ul li[over='false']").css({
+									transform: "translateY(24px)"
+								})
+							}
+							if (tarIdx < overIdx + 1) {
+								$("#navBox ul li").eq(overIdx).attr("over", "false").css({
+									transform: "translateY(0px)"
+								}).nextAll().css({
+									transform: "translateY(0px)"
+								}).attr("over", "false");
+								$("#navBox ul li").eq(overIdx).attr("over", "true").css({
+									transform: "translateY(0px)"
+								})
+								$("#navBox ul li").eq(tarIdx).nextUntil("#navBox ul li[over='false']").css({
+									transform: "translateY(-24px)"
+								})
+							}
+						}).on("mouseup.up", function() {
+							$that.remove();
+							$("#navBox ul li").eq(overIdx).before($that);
+							$navLis.css({
+								transition: "",
+								transform: "translateY(0px)"
+							}).removeAttr("over")
+							$(document).off("mousemove.move mouseup.up")
+							$falseLi.remove()
+							$that.css({
+								opacity: 1
+							});
+							var $cLi = $("#contentBox ul li").eq(tarIdx);
+							$cLi.remove();
+							$("#contentBox ul li").eq(overIdx).before($cLi);
+							winFlag = true;
+
+						});
+					});
+				}
+			})
+		</script>
+	</body>
+</html>

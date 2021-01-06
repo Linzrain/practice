@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			#box {
+				width: 970px;
+				height: 302px;
+				margin: 50px auto;
+				position: relative;
+			}
+
+			#picBox {
+				width: 100%;
+				height: 270px;
+				overflow: hidden;
+				position: relative;
+			}
+
+			#picBox ul {
+				width: 100%;
+				height: 100%;
+			}
+
+			#picBox ul li {
+				width: 0;
+				height: 0;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				opacity: 0;
+				transition: width .8s, height .8s, top .8s, left .8s, opacity .8s;
+			}
+
+			#picBox ul li.onBestLeft {
+				width: 295px;
+				height: 146px;
+				top: 62px;
+				left: -295px;
+				z-index: 4;
+			}
+
+			#picBox ul li.onLeft {
+				width: 522px;
+				height: 216px;
+				top: 27px;
+				left: 0;
+				opacity: 1;
+				z-index: 5;
+			}
+
+			#picBox ul li.onCenter {
+				width: 638px;
+				height: 270px;
+				top: 0;
+				left: 166px;
+				opacity: 1;
+				z-index: 6;
+			}
+
+			#picBox ul li.onRight {
+				width: 522px;
+				height: 216px;
+				left: 448px;
+				top: 27px;
+				opacity: 1;
+				z-index: 5;
+			}
+
+			#picBox ul li.onBestRight {
+				width: 295px;
+				height: 146px;
+				top: 62px;
+				left: 970px;
+				z-index: 4;
+			}
+
+			#picBox ul li a {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+
+			#picBox ul li a img {
+				width: 100%;
+				height: 100%;
+			}
+
+			#picBox ul li span {
+				display: block;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				background: rgba(0, 0, 0, 0.5);
+			}
+
+			#picBox ul li.onCenter span {
+				display: none;
+			}
+
+			#picBox .btnBox span {
+				width: 45px;
+				height: 45px;
+				position: absolute;
+				top: 50%;
+				margin-top: -22.5px;
+				cursor: pointer;
+				z-index: 7;
+			}
+
+			#picBox .btnBox .leftBtn {
+				left: 0;
+				background: url(img/left.png);
+			}
+
+			#picBox .btnBox .rightBtn {
+				right: 0;
+				background: url(img/right.png);
+			}
+
+			#tabBox {
+				width: 200px;
+				height: 10px;
+				padding: 10px 0;
+				position: absolute;
+				left: 50%;
+				bottom: 0;
+				margin-left: -100px;
+			}
+
+			#tabBox ul {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: space-around;
+			}
+
+			#tabBox ul li {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background-color: #bbb;
+				cursor: pointer;
+			}
+
+			#tabBox ul li.onBgColor {
+				background-color: #0cf;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<div id="picBox">
+				<ul>
+					<li class="onCenter">
+						<a><img src="img/1.jpg" /></a>
+						<span></span>
+					</li>
+					<li class="onRight">
+						<a><img src="img/2.jpg" /></a>
+						<span></span>
+					</li>
+					<li class="onBestRight">
+						<a><img src="img/3.jpg" /></a>
+						<span></span>
+					</li>
+					<li>
+						<a><img src="img/4.jpg" /></a>
+						<span></span>
+					</li>
+					<li>
+						<a><img src="img/5.jpg" /></a>
+						<span></span>
+					</li>
+					<li>
+						<a><img src="img/6.jpg" /></a>
+						<span></span>
+					</li>
+					<li>
+						<a><img src="img/7.jpg" /></a>
+						<span></span>
+					</li>
+					<li>
+						<a><img src="img/8.jpg" /></a>
+						<span></span>
+					</li>
+					<li class="onBestLeft">
+						<a><img src="img/9.jpg" /></a>
+						<span></span>
+					</li>
+					<li class="onLeft">
+						<a><img src="img/10.jpg" /></a>
+						<span></span>
+					</li>
+				</ul>
+				<div class="btnBox">
+					<span class="leftBtn"></span>
+					<span class="rightBtn"></span>
+				</div>
+			</div>
+			<div id="tabBox">
+				<ul>
+					<li class="onBgColor"></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+		</div>
+
+		<script>
+			$(function() {
+				var $picLis = $("#picBox ul li");
+				var $tabLis = $("#tabBox ul li");
+				var length = $picLis.length;
+				var leftBestIdx = 8,
+					leftIdx = 9,
+					centerIdx = 0,
+					rightIdx = 1;
+				rightBestIdx = 2;
+				var now = new Date();
+
+				// 右按钮点击事件
+				$("#picBox .rightBtn").click(function() {
+					if (new Date() - now > 500) {
+						now = new Date();
+						btnClick(true);
+					}
+				});
+				// 左按钮点击事件
+				$("#picBox .leftBtn").click(function() {
+					if (new Date() - now > 500) {
+						now = new Date();
+						btnClick(false);
+					}
+				});
+
+				//tab里的li的点击事件
+				$tabLis.click(function() {
+
+					centerIdx = $(this).index();
+					leftIdx = centerIdx - 1;
+					leftIdx = leftIdx < 0 ? length - 1 : leftIdx;
+					leftBestIdx = leftIdx - 1;
+					leftBestIdx = leftBestIdx < 0 ? length - 1 : leftBestIdx;
+					rightIdx = centerIdx + 1;
+					rightIdx = rightIdx > length - 1 ? 0 : rightIdx;
+					rightBestIdx = rightIdx + 1;
+					rightBestIdx = rightBestIdx > length - 1 ? 0 : rightBestIdx;
+
+					$picLis.eq(leftBestIdx).addClass("onBestLeft").siblings().removeClass("onBestLeft");
+					$picLis.eq(leftIdx).addClass("onLeft").siblings().removeClass("onLeft");
+					$picLis.eq(centerIdx).addClass("onCenter").siblings().removeClass("onCenter");
+					$picLis.eq(rightIdx).addClass("onRight").siblings().removeClass("onRight");
+					$picLis.eq(rightBestIdx).addClass("onBestRight").siblings().removeClass("onBestRight");
+					//tab里的li的样式
+					$tabLis.eq(centerIdx).addClass("onBgColor").siblings().removeClass("onBgColor");
+				})
+
+				// 用于左右按钮点击的函数
+				function btnClick(flag) {
+					if (flag) {
+						leftBestIdx++;
+						leftBestIdx = leftBestIdx > length - 1 ? 0 : leftBestIdx;
+						leftIdx++;
+						leftIdx = leftIdx > length - 1 ? 0 : leftIdx;
+						centerIdx++;
+						centerIdx = centerIdx > length - 1 ? 0 : centerIdx;
+						rightIdx++;
+						rightIdx = rightIdx > length - 1 ? 0 : rightIdx;
+						rightBestIdx++;
+						rightBestIdx = rightBestIdx > length - 1 ? 0 : rightBestIdx;
+					} else {
+						leftBestIdx--;
+						leftBestIdx = leftBestIdx < 0 ? length - 1 : leftBestIdx;
+						leftIdx--;
+						leftIdx = leftIdx < 0 ? length - 1 : leftIdx;
+						centerIdx--;
+						centerIdx = centerIdx < 0 ? length - 1 : centerIdx;
+						rightIdx--;
+						rightIdx = rightIdx < 0 ? length - 1 : rightIdx;
+						rightBestIdx--;
+						rightBestIdx = rightBestIdx < 0 ? length - 1 : rightBestIdx;
+					}
+					
+					$picLis.eq(leftBestIdx).addClass("onBestLeft").siblings().removeClass("onBestLeft");
+					$picLis.eq(leftIdx).addClass("onLeft").siblings().removeClass("onLeft");
+					$picLis.eq(centerIdx).addClass("onCenter").siblings().removeClass("onCenter");
+					$picLis.eq(rightIdx).addClass("onRight").siblings().removeClass("onRight");
+					$picLis.eq(rightBestIdx).addClass("onBestRight").siblings().removeClass("onBestRight");
+					//tab里的li的样式
+					$tabLis.eq(centerIdx).addClass("onBgColor").siblings().removeClass("onBgColor");
+				}
+			})
+		</script>
+	</body>
+</html>

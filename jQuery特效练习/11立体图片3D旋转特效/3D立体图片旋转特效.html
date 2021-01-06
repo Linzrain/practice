@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}
+			ul{
+				list-style-type:none;
+			}
+			#box{
+				width: 800px;
+				height: 360px;
+				margin: 100px auto;
+				position: relative;
+			}
+			#ulBox{
+				width: 100%;
+				height: 100%;
+				perspective: 800px;
+			}
+			#ulBox li{
+				float: left;
+				width: 200px;
+				height: 100%;
+				transform-style: preserve-3d;
+				transform-origin: center center -180px;
+				position: relative;
+			}
+			
+			
+			
+			#ulBox li span{
+				display: block;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				background-repeat: no-repeat;
+			}
+			#ulBox li span:nth-child(1){
+				background-image: url(img/1.png);
+			}
+			#ulBox li span:nth-child(2){
+				background-image: url(img/2.png);
+				transform: rotateX(90deg) translateZ(180px) translateY(-180px); 
+			}
+			#ulBox li span:nth-child(3){
+				background-image: url(img/3.jpg);
+				transform: translateZ(-360px) rotateY(180deg) rotateZ(180deg); 
+			}
+			#ulBox li span:nth-child(4){
+				background-image: url(img/4.jpg);
+				transform: rotateX(-90deg) translateZ(180px) translateY(180px); 
+			}
+			
+			#tabBox{
+				width: 200px;
+				height: 40px;
+				position: absolute;
+				bottom: -100px;
+				left: 50%;
+				margin-left: -100px;
+			}
+			#tabBox li{
+				float: left;
+				display: block;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				background-color: #5BC648;
+				color:#fff;
+				text-align:center;
+				line-height:40px;
+				margin-right: 13px;
+				box-shadow: 0 0 2px #fff;
+				cursor: pointer;
+			}
+			#tabBox li:last-child{
+				margin-right: 0;
+			}
+			#tabBox li.on{
+				background-color: #FF0000;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<ul id="ulBox">
+				
+			</ul>
+			<ul id="tabBox" onselectstart="return false">
+				<li class="on">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+			</ul>
+		</div>
+		
+		<script>
+			$(function(){
+				var zIdx = 0;
+				init(100)
+				
+				$("#tabBox li").click(function(){
+					var idx = $(this).index();
+					$(this).addClass("on").siblings().removeClass("on")
+					$("#ulBox li").css("transform","rotateX("+(-idx*90)+"deg)");
+				})
+				
+				function init(num) {
+					var $liWidth = $("#ulBox").width()/num
+					for(var i=0;i<num;i++){
+						var $li = $("<li><span></span><span></span><span></span><span></span></li>");
+						$li.css({
+							transition: "transform 1s "+1/num*i+"s",
+							width : $liWidth
+						})
+						$li.find("span").css({
+							backgroundPosition :  -i*$liWidth+"px 0px"
+						});
+						if(i>num/2){
+							zIdx--
+							$li.css("zIndex",zIdx)
+						}
+						$li.appendTo($("#ulBox"));
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+			body{
+				background-color: #fff;
+			}
+
+			#box {
+				width: 676px;
+				height: 61px;
+				margin: 200px auto;
+				overflow: hidden;
+			}
+
+			#box>span {
+				width: 20px;
+				height: 59px;
+				margin-top: 1px;
+				cursor: pointer;
+			}
+
+			#box .left {
+				float: left;
+				background-image: url(img/prev.png);
+			}
+
+			#box>div {
+				float: left;
+				width: 616px;
+				height: 100%;
+				margin: 0 10px;
+				overflow: hidden;
+			}
+
+			#box .right {
+				float: right;
+				background-image: url(img/next.png);
+			}
+
+			#box .picBox ul {
+				width: 200%;
+				height: 100%;
+			}
+
+			#box .picBox ul li {
+				float: left;
+				margin: 0 10px;
+			}
+
+			#box .picBox ul li img {
+				border: 1px solid #ddd;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box" onselectstart="return false">
+			<span class="left"></span>
+			<div class="picBox">
+				<ul>
+					<li>
+						<img src="img/1.png" />
+					</li>
+					<li>
+						<img src="img/2.png" />
+					</li>
+					<li>
+						<img src="img/3.png" />
+					</li>
+					<li>
+						<img src="img/4.png" />
+					</li>
+					<li>
+						<img src="img/1.png" />
+					</li>
+					<li>
+						<img src="img/2.png" />
+					</li>
+					<li>
+						<img src="img/3.png" />
+					</li>
+					<li>
+						<img src="img/4.png" />
+					</li>
+				</ul>
+			</div>
+			<span class="right"></span>
+		</div>
+
+		<script>
+			$(function() {
+				var $lis = $("#box li");
+				var $ul = $("#box ul")
+				var leftCurIdx = 0;
+				var now = new Date();
+				var timeId
+
+				$("#box .right").click(function(e) {
+					if (new Date() - now > 500) {
+						now = new Date();
+						leftCurIdx++;
+						if (leftCurIdx > 4) {
+							$ul.css({
+								marginLeft: "0px"
+							});
+							leftCurIdx = 1;
+						}
+						$ul.stop().animate({
+							marginLeft: -leftCurIdx * 154 + "px"
+						}, 500);
+					}
+				});
+
+				$("#box .left").click(function() {
+					if (new Date() - now > 500) {
+						now = new Date();
+						if (leftCurIdx == 0) {
+							leftCurIdx = 4
+							$ul.css({
+								marginLeft: -leftCurIdx * 154 + "px"
+							});
+						}
+						leftCurIdx--;
+						$ul.stop().animate({
+							marginLeft: -leftCurIdx * 154 + "px"
+						}, 500);
+					}
+				});
+
+				$("#box").hover(function() {
+					clearInterval(timeId);
+				}, function() {
+					auto();
+				});
+				auto();
+				
+
+				function auto() {
+					timeId = setInterval(function() {
+						leftCurIdx++;
+						if (leftCurIdx > 4) {
+							$ul.css({
+								marginLeft: "0px"
+							});
+							leftCurIdx = 1;
+						}
+						$ul.stop().animate({
+							marginLeft: -leftCurIdx * 154 + "px"
+						}, 500);
+					}, 2000)
+				}
+
+
+			})
+		</script>
+	</body>
+</html>

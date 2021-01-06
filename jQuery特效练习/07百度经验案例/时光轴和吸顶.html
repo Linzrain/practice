@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			body {
+				background-color: white;
+			}
+
+			#header {
+				width: 1071px;
+				margin: 0 auto;
+			}
+
+			#header img {
+				width: 100%;
+			}
+
+			#top {
+				width: 1565px;
+				height: 40px;
+				display: none;
+				position: fixed;
+				top: 0;
+
+			}
+
+			#bodyer {
+				width: 1071px;
+				margin: 10px auto;
+				font-family: "Microsoft yahei";
+			}
+
+			#bodyer h2 {
+				width: 680px;
+				border-bottom: 1px solid #ddd;
+				font-size: 22px;
+				font-weight: normal;
+				color: rgba(50, 50, 50);
+				line-height: 40px;
+			}
+
+			#bodyer>div {
+				width: 660px;
+				margin-top: 30px;
+				margin-left: 20px;
+				font-size: 16px;
+				border-left: 2px dotted #ddd;
+			}
+
+			#bodyer>div li {
+				position: relative;
+				margin-left: 30px;
+				margin-bottom: 35px;
+			}
+
+			#bodyer>div span {
+				width: 32px;
+				height: 32px;
+				position: absolute;
+				left: -48px;
+				background-color: #5bc648;
+				/*#99ed7e  #d0d0d0*/
+				color: #fff;
+				text-align: center;
+				line-height: 32px;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+
+			#bodyer li p {
+				line-height: 25px;
+				margin-bottom: 15px;
+			}
+
+			#bodyer>div span.on {
+				background-color: #5bc648;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+
+		<div id="box">
+			<div id="header">
+				<img src="img/header.png" />
+			</div>
+
+			<div id="bodyer">
+				<h2>方法/步骤</h2>
+				<div>
+					<ul>
+						<li>
+							<span class="on">1</span>
+							<div>
+								<p>试用后油法，将面团揉成团，面包机30分钟即可！牛奶要用凉的，因为面包机揉面温度较高！</p>
+								<img src="img/1.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>2</span>
+							<div>
+								<p>揉好的面团，用手抻开可以抻成薄一些的膜，有一定的扩展性！</p>
+								<img src="img/2.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>3</span>
+							<div>
+								<p>然后揉成团，放入面包机中就行第一次发酵，发酵约1小时，是原面团的2倍大！用手按下去无回缩就证明发酵好了！</p>
+								<img src="img/3.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>4</span>
+							<div>
+								<p>发酵好的面团排气揉光滑，称重！</p>
+								<img src="img/4.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>5</span>
+							<div>
+								<p>将面团平均分成5份，揉成光滑的面团！盖上保鲜膜醒发15分钟</p>
+								<img src="img/5.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>6</span>
+							<div>
+								<p>然后揉成你想放的模具中，没有就用纸拖，或可以不用也行。</p>
+								<img src="img/6.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>7</span>
+							<div>
+								<p>将烤箱中放一碗热水保持湿度，把面包生坯放入烤箱就行二次发酵，烤箱温度不易超过30度，发酵40分钟！</p>
+								<img src="img/7.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>8</span>
+							<div>
+								<p>然后烤箱预热180度，上下火加热中下层烤20左右即可！</p>
+								<img src="img/8.jpg" />
+							</div>
+						</li>
+						<li>
+							<span>9</span>
+							<div>
+								<p>软软的很好吃！</p>
+								<img src="img/9.jpg" />
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<img src="img/top.png" id="top" />
+		</div>
+
+
+		<script>
+			$(function() {
+				var $top = $("#top");
+				var $spans = $("#bodyer span");
+				var $lis = $("#bodyer li");
+				var h = $top.height();
+
+				// 给每个序号注册点击事件,使文档滑动到相应位置
+				$spans.each(function(idx) {
+					$(this).click(function() {
+							$("html,body").animate({
+								scrollTop: $lis.eq(idx).offset().top - h
+							}, 200);
+					});
+				});
+
+				srcoll();
+				$(window).resize(function() {
+					srcoll();
+					$spans.each(function(idx, ele) {
+						var a = $(this).offset().top - $(document).scrollTop();
+						var spanLeft = $("#bodyer>div").offset().left - $(document).scrollLeft();
+						// 判断文档位置使序号固定到相应位置
+						if (a - 32 * idx - h <= 0) {
+							$(this).css({
+								position: "fixed",
+								top: h + 32 * idx,
+								left: spanLeft - 16
+							});
+							// 使上一个序号的背景变灰
+							if (idx - 1 >= 0) {
+								$spans.eq(idx - 1).css("backgroundColor", "#d0d0d0")
+							} //if end
+						} //if end
+					});
+
+				})
+
+
+
+				function srcoll() {
+					// 窗口滑动事件
+					$(window).scroll(function() {
+						var scrollTop = $(document).scrollTop(),
+							scrollLeft = $(document).scrollLeft();
+
+						//$top的隐藏和显示
+						if (scrollTop >= 150) {
+							$top.show();
+						} else {
+							$top.hide();
+						}
+
+						// 使序号固定到相应位置并改变上一个序号的背景颜色
+						$spans.each(function(idx, ele) {
+							var a = $(this).offset().top - scrollTop;
+							var spanLeft = $("#bodyer>div").offset().left - scrollLeft;
+							// 判断文档位置使序号固定到相应位置
+							if (a - 32 * idx - h <= 0) {
+								$(this).css({
+									position: "fixed",
+									top: h + 32 * idx,
+									left: spanLeft - 16
+								});
+								// 使上一个序号的背景变灰
+								if (idx - 1 >= 0) {
+									$spans.eq(idx - 1).css("backgroundColor", "#d0d0d0")
+								} //if end
+							} //if end
+						});
+
+						// 使序号回复到相应位置并改变当前序号的背景颜色
+						$lis.each(function(idx, ele) {
+							var b = $(this).offset().top - scrollTop;
+							var spanLeft = $("#bodyer>div").offset().left - scrollLeft;
+
+							if (b - 32 * idx - h >= 0) {
+								$spans.eq(idx).css({
+									position: "absolute",
+									top: 0,
+									left: "-48px"
+								});
+								$spans.eq(idx).css("backgroundColor", "#5bc648")
+								$spans.eq(idx - 1).css("backgroundColor", "#5bc648")
+							}
+						});
+					});
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}
+			ul{
+				list-style-type:none;
+			}
+			a{
+				text-decoration:none;
+			}
+			body{
+				background: #fff;
+			}
+			#headerBox{
+				width:1201px;
+				height:160px;
+				background:url(img/1.png);
+				margin:0 auto;
+			}
+			#navBox{
+				width: 100%;
+				min-width: 1201px;
+				height: 50px;
+				border-bottom: 1px solid #f69;
+				line-height: 50px;
+				background: #fff;
+			}
+			#navBox.fixed{
+				position: fixed;
+				top:0;
+			}
+			#navBox ul{
+				width: 1201px;
+				height: 100%;
+				margin: 0 auto;
+			}
+			#navBox ul li{
+				float: left;
+				font-family: "雅黑";
+				font-size: 16px;
+			}
+			#navBox ul li a{
+				color: #000;
+				padding: 0 20px;
+			}
+			#navBox ul li a:hover{
+				color: #f69;
+			}
+			#navBox ul li.colorChange a{
+				color: #f69;
+				font-weight:bold;
+			}
+			#mainer{
+				width:1201px;
+				height:1737px;
+				background: url(img/2.png) no-repeat;
+				margin: 0 auto;
+			}
+			#mainer.margin{
+				margin-top: 50px;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="headerBox"></div>
+		<div id="navBox">
+			<ul>
+				<li><a href="">首页</a></li>
+				<li><a href="">最新</a></li>
+				<li><a href="">上衣</a></li>
+				<li><a href="">裙子</a></li>
+				<li><a href="">裤子</a></li>
+				<li><a href="">鞋子</a></li>
+				<li><a href="">包包</a></li>
+				<li><a href="">配饰</a></li>
+				<li><a href="">更多</a></li>
+				<li class="colorChange"><a href="">Hi范儿</a></li>
+				<li class="colorChange"><a href="">明星同款</a></li>
+				<li class="colorChange"><a href="">韩国馆</a></li>
+				<li class="colorChange"><a href="">团购</a></li>
+				<li class="colorChange"><a href="">福利社</a></li>
+			</ul>
+		</div>
+		<div id ="mainer"></div>
+		
+		<script>
+			$(function(){
+				var $nav = $("#navBox");
+				var $mainer = $("#mainer");
+				var top = $("#navBox").offset().top;
+				$(window).scroll(function(){
+					if($(document).scrollTop()>top){
+						$nav.addClass("fixed");
+						$mainer.addClass("margin");
+					}else{
+						$nav.removeClass("fixed");
+						$mainer.removeClass("margin");
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

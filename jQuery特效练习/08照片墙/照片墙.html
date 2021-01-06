@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			#box {
+				width: 90%;
+				height: 90%;
+				position: absolute;
+				top: 5%;
+				left: 5%;
+			}
+
+
+			#box ul li {
+				width: 125px;
+				height: 125px;
+				box-shadow: 0 0 1px #000;
+				position: absolute;
+				background: white;
+				cursor: pointer;
+				transition: left .7s, top .7s;
+			}
+
+			#box ul li img {
+				transition: transform .7s;
+				transform: scale(0.92);
+			}
+
+			#btnBox {
+				display: none;
+			}
+
+			.leftBtn,
+			.rightBtn {
+				width: 50px;
+				height: 50px;
+				position: absolute;
+				top: 50%;
+				margin-top: -25px;
+				font-size: 50px;
+				line-height: 50px;
+				text-align: center;
+				color: #5BC648;
+				cursor: pointer;
+			}
+
+			.leftBtn {
+				left: 0;
+			}
+
+			.rightBtn {
+				right: 0;
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<ul></ul>
+			<div id="btnBox" onselectstart="return false">
+				<span class="leftBtn">&lt;</span>
+				<span class="rightBtn">&gt;</span>
+			</div>
+		</div>
+
+
+		<script>
+			$(function() {
+				var $box = $("#box");
+				var $ul = $("#box>ul");
+				var $lis, $imgs, lWidth, lheight, curIdx;
+				var offOn = true, //li点击分流
+					flag = true, //li点击限流
+					styleFlag = true; //btn点击限流
+
+
+				//添加li和img标签
+				for (var i = 0; i < 24; i++) {
+					var $li = $("<li><img src = 'img/" + (i + 1) + ".jpg'/></li>");
+					$li.appendTo($ul)
+				} //for end
+
+
+				$lis = $("#box li");
+				$imgs = $("#box li img");
+				lWidth = $lis.eq(0).width(), lheight = $lis.eq(0).height();
+
+
+				//初始化li的位置和旋转角度
+				liPosition();
+				liRandomR()
+
+				//li的点击事件
+				$lis.click(liClick);
+
+				// 下一张图片
+				$(".rightBtn").click(function() {
+					if (styleFlag) {
+						styleFlag = false;
+						curIdx++
+						curIdx = curIdx > 23 ? 0 : curIdx
+						showPicStyle();
+					}
+				});
+
+				//上一张图片
+				$(".leftBtn").click(function() {
+					if (styleFlag) {
+						styleFlag = false;
+						curIdx--
+						curIdx = curIdx < 0 ? 23 : curIdx
+						showPicStyle();
+					}
+				});
+
+				//内容适应窗口大小
+				$(window).resize(function() {
+					if (offOn) {
+						liPosition();
+					} else {
+						var leftSpaceX = ($box.width() - 6 * $lis.eq(0).width()) / 2,
+							leftSpaceY = ($box.height() - 4 * $lis.eq(0).height()) / 2;
+						$lis.each(function(idx) {
+							$(this).css({
+								left: leftSpaceX + idx % 6 * lWidth,
+								top: leftSpaceY + Math.floor(idx / 6) * lheight,
+							});
+						});
+					}
+				})
+
+				// 随机角度
+				function liRandomR() {
+					$lis.each(function(idx) {
+						var randomR = (Math.random() - 0.5) * 60 //[-30,30)区间
+						$(this).css("transform", "rotate(" + randomR + "deg)")
+					})
+				}
+
+				// 照片初始位置
+				function liPosition() {
+					$lis.each(function(idx) {
+						var gapX = ($box.width() - 6 * lWidth) / 5; //x间隔
+						var gapY = ($box.height() - 4 * lheight) / 3; //y间隔
+						$(this).css({
+							left: idx % 6 * (gapX + lWidth),
+							top: Math.floor(idx / 6) * (gapY + lheight),
+						})
+					});
+				}
+
+				// li的点击事件
+				function liClick() {
+					if (flag) {
+						flag = false;
+						if (offOn) {
+							var index = $(this).index();
+							curIdx = index; //记录当前照片
+							$imgs.css({
+								transform: "scale(1)"
+							});
+							var leftSpaceX = ($box.width() - 6 * $lis.eq(0).width()) / 2,
+								leftSpaceY = ($box.height() - 4 * $lis.eq(0).height()) / 2;
+							setTimeout(function() {
+								$lis.each(function(idx) {
+									$(this).css({
+										transition: "transform .7s,left .7s,top .7s",
+										transform: "rotate(0deg)",
+										left: leftSpaceX + idx % 6 * lWidth,
+										top: leftSpaceY + Math.floor(idx / 6) * lheight,
+										backgroundColor: "",
+										backgroundImage: "url(img/big/" + (index + 1) + ".jpg)",
+										backgroundPosition: -idx % 6 * lWidth + "px " + (-Math.floor(idx / 6) * lheight) + "px"
+									});
+								});
+								$imgs.fadeOut(700, function() {
+									$("#btnBox").show()
+									offOn = false;
+									flag = true;
+								});
+							}, 700);
+						} else {
+							liPosition();
+							liRandomR()
+							$("#btnBox").hide()
+							$imgs.fadeIn(700, function() {
+								offOn = true;
+								flag = true;
+							});
+							setTimeout(function() {
+								$lis.css("background", "#fff")
+								$imgs.css({
+									transform: "scale(0.92)"
+								});
+							}, 700);
+						}
+					}
+				}
+
+				//逐块显示图片(用于btn)
+				function showPicStyle() {
+					var arr = [];
+					for (var i = 0; i < 24; i++) {
+						arr[i] = i;
+					}
+					var timeId = setInterval(function() {
+						var r = Math.floor(Math.random() * arr.length);
+						$lis.eq(arr[r]).css({
+							backgroundImage: "url(img/big/" + (curIdx + 1) + ".jpg)"
+						});
+						arr.splice(r, 1);
+						if (!arr.length) {
+							clearInterval(timeId);
+							styleFlag = true
+						}
+					}, 20)
+				}
+			})
+		</script>
+	</body>
+</html>

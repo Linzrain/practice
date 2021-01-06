@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+
+			ul {
+				list-style-type: none;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			a img {
+				border: none;
+			}
+
+			#heaher {
+				width: 100%;
+				height: 47px;
+				position: fixed;
+				top: 27px;
+			}
+
+			#heaher .logo {
+				float: left;
+				margin-left: 50px;
+			}
+
+			#heaher .nav {
+				width: 400px;
+				height: 47px;
+				float: right;
+				margin-right: 50px;
+				position: relative;
+			}
+
+			#heaher .border {
+				width: 56px;
+				height: 30px;
+				border: 1px solid rgba(255, 255, 255, 0.7);
+				border-radius: 15px;
+				position: absolute;
+				top: 8.5px;
+			}
+
+			#heaher ul {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				position: absolute;
+			}
+
+			#heaher ul li {
+				height: 30px;
+				font-size: 14px;
+				line-height: 30px;
+				text-align: center;
+				color: rgba(255, 255, 255, 0.8);
+				text-shadow: 4px 3px 10px #000;
+				font-family: 'Microsoft yahei', '宋体';
+				cursor: pointer;
+				transition: color .3s;
+			}
+
+			#heaher ul li:hover {
+				color: #fff;
+			}
+
+			#heaher ul .one {
+				width: 56px;
+			}
+
+			#heaher ul .two {
+				width: 84px;
+			}
+
+			#heaher ul .three {
+				width: 56px;
+			}
+
+			#heaher ul .four {
+				width: 101px;
+			}
+
+			#bg {
+				height: 100%;
+			}
+
+			#bg div {
+				height: 100%;
+				background-attachment: fixed;
+			}
+
+			#slider {
+				width: 120px;
+				height: 330px;
+				position: fixed;
+				top: 35%;
+				left: 50px;
+				background: url(img/nav.png) no-repeat;
+			}
+
+			#slider ul {
+				height: 252px;
+				margin-top: 6px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+
+			#slider ul li {
+				line-height: 21px;
+				color: #fff;
+				font-size: 15px;
+				padding-left: 50px;
+				background-repeat: no-repeat;
+				cursor: pointer;
+			}
+
+			#slider ul li.on {
+				background-image: url(img/nav_cho.png);
+			}
+		</style>
+		<script src="jQ库/jquery-1.12.4.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
+	</head>
+	<body>
+		<div id="heaher">
+			<div class="logo">
+				<a href="#"><img src="img/logo.png" /></a>
+			</div>
+			<div class="nav">
+				<div class="border"></div>
+				<ul>
+					<li class="one">首页</li>
+					<li class="two">常见问题</li>
+					<li class="three">论坛</li>
+					<li class="four">360首页&gt;&gt;</li>
+				</ul>
+			</div>
+		</div>
+		<div id="bg">
+			<div style="background-image: url(img/1.jpg);"></div>
+			<div style="background-image: url(img/2.jpg);"></div>
+			<div style="background-image: url(img/3.jpg);"></div>
+			<div style="background-image: url(img/4.jpg);"></div>
+		</div>
+		<div id="slider">
+			<ul>
+				<li class="on">安全换机</li>
+				<li>无网对传</li>
+				<li>隐私粉碎</li>
+				<li>一键转移</li>
+			</ul>
+		</div>
+		<script>
+			$(function() {
+
+				var idx = 0; //用于记录并改变bg的位置
+				var now = new Date();//用于限制滑动频率
+
+				var $border = $(".nav .border");
+
+				// 进入导航栏里li时使边框变化
+				$(".nav li").mouseenter(function() {
+					$border.stop(true).animate({
+						left: $(this).position().left,
+						width: $(this).width()
+					}, 300);
+				});
+
+				// 离开导航栏时使边框复原
+				$(".nav").mouseleave(function() {
+					$border.stop(true).animate({
+						left: $(".nav li:eq(0)").position().left,
+						width: $(".nav li:eq(0)").width()
+					}, 300);
+				});
+
+
+				// 使页面滑动一个背景长度的函数
+				function slider() {
+					$("#slider li").eq(idx).addClass("on").siblings().removeClass("on");
+					$("html,body").stop(true).animate({
+						scrollTop: idx * $("#bg div:eq(0)").height()
+					}, 500);
+				}
+
+				//点击使页面滑动
+				$("#slider li").click(function() {
+					idx = $(this).index();
+					slider();
+				});
+
+				// 鼠标滑轮使页面滑动
+				$(document).mousewheel(function(e, d) {
+					if(new Date()-now>500){
+						now = new Date();
+						if (d < 0) {
+							idx++;
+							idx = idx > $("#bg div").length - 1 ? 0 : idx;
+							slider();
+						}
+						if (d > 0) {
+							idx--;
+							idx = idx < 0 ? $("#bg div").length - 1 : idx;
+							slider();
+						}
+					}
+				});
+
+				// 窗口大小改变就使文档的scrollTop自适应
+				$(window).resize(function() {
+					$("html,body").scrollTop(idx * $(window).height());
+				})
+			})
+		</script>
+	</body>
+</html>
