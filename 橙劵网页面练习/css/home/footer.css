@@ -1,0 +1,109 @@
+.footer{
+	width: 1920px;
+	height: 384px;
+	padding-top: 57px;
+	box-sizing: border-box;
+	background-image: linear-gradient(#22212f,#22212f), linear-gradient(180deg, #24272d 0%,#373c49 100%);
+}
+.footer-content{
+	width: 1038px;
+	height: 247px;
+	margin: 0 0 19px 444px;
+	display: flex;
+	align-items: center;
+}
+.footer-content-left{
+	width: 290px;
+	height: 100%;
+}
+.left-tel{
+	width: 100%;
+	height: 43px;
+	margin-bottom: 18px;
+}
+.left-tel-icon{
+	float: left;
+	width: 43px;
+	height: 43px;
+	margin-right: 6px;
+	background-image: url(../../imgs/homeImg/在线客服.png);
+}
+.left-tel-text{
+	float: left;
+}
+.text-num{
+	height: 22px;
+	color: white;
+	margin-bottom: 6px;
+	font-size: 22px;
+	line-height: 22px;
+}
+.text-time{
+	height: 14px;
+	font-size: 14px;
+	line-height: 14px;
+	color: #d2d2d2;
+}
+.left-img_caption{
+	padding-left: 35px;
+}
+.left-img_caption img{
+	width: 159px;
+	height: 159px;
+}
+.caption{
+	margin-top: 10px;
+	height: 12px;
+	font-size: 12px;
+	line-height: 12px;
+	color: #cecece;
+}
+
+
+
+.footer-content-divider{
+	width: 1px;
+	height: 242px;
+	background-color: #4c4f5f;
+}
+
+
+
+.footer-content-right{
+	padding-left: 93px;
+	height: 100%;
+}
+.right-link{
+	float: left;
+}
+.right-link+.right-link{
+	margin-left: 129px;
+}
+.right-link-title{
+	line-height: 20px;
+	margin-bottom: 42px;
+	color: white;
+}
+.right-link li{
+	font-size: 14px;
+	color:  #cecece;
+}
+.right-link li+li{
+	margin-top: 20px;
+}
+
+.footer-bigDivider{
+	margin: 0 auto;
+	width: 1245px;
+	height: 1px;
+	background-color: #4c4f5f;
+}
+
+.footer-beian{
+	margin-top: 21px;
+	height: 14px;
+	font-size: 14px;
+	color: #7e8088;
+	line-height: 14px;
+	text-align: center;
+}

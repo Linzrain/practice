@@ -1,0 +1,120 @@
+.news-headline{
+	width: 1920px;
+	height: 200px;
+	background-image: url(../../imgs/newsImg/banner.png);
+	position: relative;
+}
+.news-headline-text{
+	position: absolute;
+	top: 55px;
+	left: 50%;
+	width: 860px;
+	margin-left: -430px;
+	color: #ffffff;
+}
+.news-headline-text h3{
+	height: 40px;
+	font-size: 44px;
+	font-weight: 200;
+	line-height: 40px;
+	text-align: center;
+	margin-bottom: 25px;
+}
+.news-headline-text p{
+	height: 26px;
+	font-size: 20px;
+	font-weight: 100;
+	line-height: 26px;
+	text-align: center;
+}
+
+.news-total{
+	width: 1920px;
+	padding: 82px 0 61px;
+	background-color: #fcfcfc;
+}
+.news-total-content{
+	margin: 0 auto;
+	width: 1202px;
+}
+.news-total-content>ul{
+	display: flex;
+	width: 100%;
+	height: 1164px;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.item{
+	position: relative;
+	width: 386px;
+	height: 328px;
+	background-color: #FFFFFF;
+	box-shadow: 0px 0px 10px 0px rgba(237, 237, 237, 0.7);
+}
+.item>a{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.item-img{
+	width: 385px;
+	height: 219px;
+	overflow: hidden;
+}
+.item-img img{
+	width: 385px;
+	height: 219px;
+}
+.item-text{
+	padding: 20px 0 0 20px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #333333;
+}
+.item-time{
+	position: absolute;
+	left: 20px;
+	bottom: 22px;
+	font-size: 14px;
+	color: #666666;
+}
+
+.pageNum{
+	width: 309px;
+	height: 35px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.pageNum-back{
+	width: 22px;
+	height: 22px;
+	background-image: url(../../imgs/newsImg/back.png);
+}
+.pageNum-next{
+	width: 22px;
+	height: 22px;
+	background-image: url(../../imgs/newsImg/next.png);
+}
+.pageNum-lie{
+	width: 185px;
+	height: 35px;	
+}
+.pageNum-lie span{
+	float: left;
+	width: 35px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 50%;
+	background-color: transparent;
+}
+.pageNum-lie span+span{
+	margin-left: 15px;
+}
+.curr{
+	color: white;
+	background-color: #ff6c00 !important;
+}

@@ -1,0 +1,170 @@
+.partner{
+	width: 1920px;
+	height: 912px;
+	padding-top: 82px;
+	background-image: url(../../imgs/homeImg/bg1.png);
+}
+.partner-title {
+	width: 302px;
+	height: 79px;
+	margin: 0 auto 69px;
+	background-image: url(../../imgs/homeImg/用科技.png);
+}
+.partner-list{
+	width: 1161px;
+	margin: 0 auto 68px;
+	display: flex;
+}
+.partner-list li{
+	width: 181px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	font-size: 18px;
+	background-color: #ffffff;
+	box-shadow: 0px -1px 21px 0px rgba(192, 192, 192, 0.35);
+	border-radius: 25px;
+}
+.partner-list li+li{
+	margin-left: 15px;
+}
+.bg{
+	background-color: #ff7200 !important;
+	color: white;
+}
+
+
+
+.partner-content{
+	width: 1200px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+}
+.partner-content-left{
+	width: 53px;
+	height: 53px;
+	background-image: url(../../imgs/homeImg/←←.png);
+}
+.partner-content-right{
+	width: 53px;
+	height: 53px;
+	background-image: url(../../imgs/homeImg/→→.png);
+}
+.partner-content-midd{
+	width: 1060px;
+	height: 452px;
+	margin: 0 auto;
+	position: relative;
+}
+.partner-content-midd>div{
+	position: absolute;
+	width: 500px;
+	background-color: #ffffff;
+	box-shadow: 0px -1px 21px 0px rgba(114, 113, 113, 0.3);
+}
+.midd-one{
+	left: 0;
+	top:50%;
+	margin-top: -185px;
+	height: 390px;
+}
+.midd-two{
+	left: 50%;
+	margin-left: -250px;
+	height: 452px;
+	z-index: 2;
+}
+.midd-three{
+	right: 0;
+	top:50%;
+	margin-top: -185px;
+	height: 390px;
+}
+.midd-one div{
+	width: 169px;
+	height: 35px;
+	margin: 93px 0 66px 84px;
+	background-image: url(../../imgs/homeImg/联通.png);
+	background-size: 169px 35px;
+}
+.midd-two div{
+	width: 218px;
+	height: 55px;
+	margin: 86px auto 69px;
+	background-image: url(../../imgs/homeImg/银联.png);
+}	
+.midd-three div{
+	width: 160px;
+	height: 22px;
+	margin: 102px 0 71px 259px;
+	background-image: url(../../imgs/homeImg/腾讯.png);
+	background-size: 160px 22px;
+}
+.partner-content-midd p{
+	margin: 0 auto;
+	width: 421px;
+	font-size: 14px;
+	line-height: 30px;
+	color: #333333;
+}
+.sign{
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	margin-left: -40px;
+	width: 80px;
+	height: 2px;
+	background-color: #ff7200;
+}
+
+.contact{
+	width: 1920px;
+	height: 330px;
+	background-image: url(../../imgs/homeImg/bg2.png);
+}
+.contact-slogan {
+	padding: 102px 0 24px 0;
+	height: 48px;
+	text-align: center;
+	font-size: 48px;
+	font-weight: 100;
+	line-height: 48px;
+	color: #ffffff;
+}
+.contact-tel{
+	width: 614px;
+	margin: 0 auto;
+}
+.contact-tel p{
+	text-align: center;
+}
+.contact-tel span{
+	font-size: 20px;
+	font-weight: 100;
+	line-height: 20px;
+	color: #ffffff;
+}
+.contact-tel-divider{
+	margin: 0 27px;
+}
+.contact-tel>div{
+	margin: 31px auto 0;
+	width: 150px;
+	height: 40px;
+	border-radius: 20px;
+	border: solid 1px #e6e6e6;
+	line-height: 40px;
+	text-align: center;
+	color: white;
+}
+.contact-tel div span{
+	font-size: 16px;
+}
+.tel-more-icon{
+	margin-left: 8px;
+	width: 6px;
+	height: 12px;
+	display: inline-block;
+	background-image: url(../../imgs/homeImg/白色→.png);
+}
