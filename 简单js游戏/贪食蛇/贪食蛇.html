@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			.map {
+				width: 800px;
+				height: 600px;
+				background-color: #CCC;
+				position: relative;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="map"></div>
+
+
+		<script>
+			//自调用函数---------------食物
+			(function() {
+				function Food(width, height, color) {
+					this.width = width || 20;
+					this.height = height || 20;
+					this.color = color || "green";
+					this.element = document.createElement("div");
+					this.x = 0;
+					this.y = 0;
+				}
+				//初始化食物
+				Food.prototype.init = function(map) {
+					//map中有食物就先删除食物,这是删除步骤
+					if(this.element.parentElement==map){
+						map.removeChild(this.element);
+					}
+					//设置食物的样式属性
+					this.element.style.position = "absolute";
+					this.element.style.width = this.width + "px";
+					this.element.style.height = this.height + "px";
+					this.element.style.background = this.color;
+					//加入map中
+					map.appendChild(this.element);
+					//随机座标
+					this.x = Math.floor(Math.random() * (map.offsetWidth / this.width)) ;
+					this.y = Math.floor(Math.random() * (map.offsetHeight / this.height)) ;
+					this.element.style.left = this.x* this.width + "px";
+					this.element.style.top = this.y* this.height + "px";
+				}
+				window.Food = Food;
+			}());
+
+			// 自调用函数-----------小蛇
+			(function() {
+				var that = null;//存放snake对象
+				//目的时存放小蛇各个部位,目的是删除
+				var snakes = [];
+				function Snake(oneWidth, oneHeight, direction) {
+					//小蛇每个方块的属性
+					this.oneWidth = oneWidth || 20;
+					this.oneHeight = oneHeight || 20;
+					this.direction = direction || "right";
+					this.mid = "right";//储存将重新计时最后一个按键方向
+					//小蛇身体具体每个方块的座标和颜色
+					this.body = [{
+							x: 3,
+							y: 2,
+							color: "red"
+						}, //头
+						{
+							x: 2,
+							y: 2,
+							color: "orange"
+						}, //身体
+						{
+							x: 1,
+							y: 2,
+							color: "orange"
+						} //身体
+					];
+					that = this;
+				}
+				//初始化小蛇
+				Snake.prototype.init = function(food,map) {
+					//先删除旧蛇,再创建新蛇
+					remove(snakes);
+					//创建小蛇并加入map中
+					for (var i = 0; i < this.body.length; i++) {
+						var div = document.createElement("div");
+						div.style.position = "absolute";
+						div.style.width = this.oneWidth + "px";
+						div.style.height = this.oneHeight + "px";
+						div.style.background = this.body[i].color;
+						div.style.left = this.body[i].x * this.oneWidth + "px";
+						div.style.top = this.body[i].y * this.oneHeight + "px";
+						map.appendChild(div);
+						//把各个部位放入数组中,目的是删除
+						snakes.push(div);
+					}
+				}
+				//小蛇移动一次的方法
+				Snake.prototype.onceMove = function(food,map) {
+					//每一次移动先,改变小蛇身体部分的座标（继承前一块的座标）
+					for (var i = this.body.length - 1; i > 0; i--) {
+						this.body[i].x = this.body[i - 1].x;
+						this.body[i].y = this.body[i - 1].y;
+					}//for end
+					this.direction = this.mid;//每次移动刷新direction
+					//后改变小蛇头部,才不会影响身体部分的座标继承
+					switch (this.direction) {
+						case "right":
+							this.body[0].x += 1;
+							break;
+						case "left":
+							this.body[0].x -= 1;
+							break;
+						case "top":
+							this.body[0].y -= 1;
+							break;
+						case "bottom":
+							this.body[0].y += 1;
+							break;
+					}//switch end
+					
+					//每次移动,判断是否吃掉食物
+					//即判断蛇头与食物座标是否重合
+					var snakeHeadX = this.body[0].x;
+					var snakeHeadY = this.body[0].y;
+					var flag = this.body.some(function(ele,index){
+						return index==0 ? false : ele.x==snakeHeadX&&ele.y==snakeHeadY;
+					});
+					console.log(flag)
+					if(snakeHeadX==food.x&&snakeHeadY==food.y){
+						// 复制蛇尾,并添加到小蛇body最尾端
+						console.log(snakeHeadX)
+						var last =this.body[this.body.length-1];
+						console.log(last);
+						this.body.push({
+							x:last.x,
+							y:last.y,
+							color:last.color
+						});
+						// 添加后并删除食物(即初始化食物)
+						food.init(map);
+					}//if end
+					if(flag){
+						clearInterval(this.timeId);
+						alert("游戏结束");
+					}
+				}//onceMove end
+				
+				//
+				Snake.prototype.run = function (food,map) {
+					var maxX = map.offsetWidth/this.oneWidth;
+					var maxY = map.offsetHeight/this.oneHeight;
+					
+					this.timeId = setInterval(function(){
+						this.onceMove(food,map)
+						this.init(food,map)
+						var headX = this.body[0].x;
+						var headY = this.body[0].y;
+						if(headX<0||headX>=maxX){
+							clearInterval(this.timeId);
+							console.log(this.timeId)
+							alert("游戏结束");
+						}
+						if(headY<0||headY>=maxY){
+							clearInterval(this.timeId);
+							console.log(this.timeId)
+							alert("游戏结束");
+						}
+					}.bind(that),100)
+				}
+				
+				function remove(arr) {
+					for(var i=arr.length-1;i>=0;i--){
+						arr[i].parentElement.removeChild(arr[i]);
+						arr.splice(i,1);
+					}
+				}
+
+				window.Snake = Snake;
+
+			}());
+			//自调用函数-----------游戏
+			(function() {
+				var that = null;//存放Game对象
+				function Game(map) {
+					this.food = new Food(20, 20, "yellow");
+					this.snake = new Snake(20, 20);
+					this.map = map;
+					that = this;
+				}
+				//初始化游戏
+				Game.prototype.init = function() {
+					//初始化食物
+					this.food.init(this.map);
+					//初始化小蛇
+					this.snake.init(this.food,this.map);
+					//使小蛇动起来
+					this.snake.run(this.food,this.map);
+					//操作小蛇
+					this.bindKey();
+				}
+				//操作小蛇
+				Game.prototype.bindKey = function () {
+					document.addEventListener("keydown",function(e){
+						switch(e.keyCode){
+							case 37 : this.snake.direction=="right"? "right" : this.snake.mid = "left"; break;
+							case 38 : this.snake.direction=="bottom"? "bootom" : this.snake.mid = "top"; break;
+							case 39 : this.snake.direction=="left"? "left" : this.snake.mid = "right"; break;
+							case 40 : this.snake.direction=="top"? "top":this.snake.mid = "bottom"; break;
+						}
+					}.bind(that),false)
+				}
+
+				window.Game = Game;
+			}());
+			var gm = new Game(document.querySelector(".map"))
+			gm.init();
+			
+
+			// var fd = new Food(20,20,"yellow");
+			// fd.init(document.querySelector(".map"))
+			// var sk = new Snake(20,20);
+			// sk.init(document.querySelector(".map"));
+		</script>
+	</body>
+</html>
